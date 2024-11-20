@@ -1,8 +1,9 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
+from pipeline.hyde_pipeline import HydePipeline
 from models.request_models import AnthropicRequest
-from services.anthropic_service import anthropic_stream_response
 from core.logging import logger
+
 
 router = APIRouter()
 
@@ -18,8 +19,11 @@ def log_request(request: AnthropicRequest):
     logger.info(f"Messages count:   {len(request.messages)}")
     logger.info(f"Last message:     {request.messages[-1].content}")
 
-@router.post("/api/chat")
-async def handle_chat_data(request: AnthropicRequest):
+
+@router.post("/api/hyde")
+async def process_chat(
+    request: AnthropicRequest,
+    hyde_pipeline: HydePipeline = Depends(),
+):
     log_request(request)
-    response = StreamingResponse(anthropic_stream_response(request), media_type="plain/text")
-    return response
+    return StreamingResponse(hyde_pipeline.process_query(request), media_type="plain/text")

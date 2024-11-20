@@ -25,7 +25,7 @@ def create_message(request: AnthropicRequest):
         }]
     return request.messages
 
-def anthropic_response(request: AnthropicRequest):
+def anthropic_stream_response(request: AnthropicRequest):
     messages = create_message(request)
     stream = client.messages.create(
         model=request.model,
