@@ -1,0 +1,442 @@
+OctopAI prototype  
+Conversation Menu  
+Contents  
+1.  Good example - 'We often hear the phrase “saving for the future”. What kind of 
+future do you dream of saving for?' 
+2.  How it could go wrong - 'We often hear the phrase “saving for the future”. What 
+kind of future do you dream of saving for?' 
+3.  How could OctopAI help 
+4.  AI Co-host version - 'We often hear the phrase “saving for the future”. What kind 
+of future do you dream of saving for?' 
+5.  AI Co-host version - "Do you know what your bank does with your money?" 
+1. Good example - 'We often hear the phrase “saving for the future”. What kind of 
+future do you dream of saving for?' 
+Objectives of the question:  
+o  Connect with personal and collective values, and a vision for what a positive 
+future might look like. 
+o  The vision should help guide the decisions the group make about what to do with 
+their money, as they go further through the Money Movers programme. 
+ 
+In this scenario, Alex is a skilled host, making sure everyone is heard, coaching people 
+to draw out more ideas when they feel stuck, building connection within the group and 
+gently stopping individuals from dominating the conversation.  
+ 
+Host (Alex): Alright everyone, let’s dive into the next question. We often hear the phrase 
+“Saving for the future.” But I want to take a moment to really explore this together. 
+What kind of future do you each dream of saving for? There’s no wrong answer here—
+it’s all about your personal vision. Who’d like to start? 
+Emma: Um, I can go. I think...for me, it’s about my kids. I want to save for a future where 
+they don’t have to worry about things like, I don’t know, clean air or fresh water. I want 
+them to live in a world where those things are just...given, not something they have to 
+fight for. 
+Host (Alex): That’s powerful, Emma. Wanting a future for your kids where clean air and 
+water are just a part of life—it’s such a deep and important dream. Thank you for 
+sharing that. Who else wants to add? 
+Sam: I think for me it’s about community. I’d like to save for a future where we’re all a 
+little more connected—where money isn’t just about individual gain, but about building 
+something together. Maybe funding community projects or green spaces where we can 
+all benefit. It’s less lonely that way, you know? 
+  
+Host (Alex): Absolutely, Sam. A future where community and connection are at the 
+centre—that’s a beautiful way to think about saving. It sounds like you're saying it's not 
+just about security, but also about belonging and shared wellbeing. That’s inspiring. 
+What about you, Priya? 
+Priya: I guess I’m still figuring it out. I’ve always thought of saving as just...making sure 
+I’m okay, like having enough for emergencies. But if I think bigger, I want to save for a 
+future where the environment is stable. Like, where we’ve managed to fix some of the 
+things that are broken now—like, renewable energy being the norm and less waste 
+everywhere. 
+Host (Alex): That’s such an honest reflection, Priya. It’s totally okay to still be figuring it 
+out. I love how you linked your own stability to the environment’s stability—they’re 
+really connected, right? Thanks for bringing that perspective. 
+Michael: I’ll jump in. I think...I want to save for a future where my choices don’t harm 
+others. Like, investing in things that help the planet instead of hurting it. I’ve been 
+thinking about where my money goes, and I’d like it to be used for good, you know? Not 
+just profit for profit’s sake. 
+Host (Alex): Thanks for sharing, Michael. I’d love to hear from Jenna next. Let’s make 
+sure everyone has a chance to contribute before we come back to any other thoughts. 
+Michael: Oh, right, sure. Sorry about that. 
+Host (Alex): No problem, Michael—I appreciate your enthusiasm. Jenna, would you like 
+to share your thoughts? 
+Jenna: Yeah, sure. For me, it’s...about fairness. I want to save for a future where 
+everyone has enough. Not just me, but people who are struggling now too. Like, using 
+my savings or investments to support things that help reduce inequality. I just feel like 
+it’s not really a good future unless we all get to be a part of it. 
+Host (Alex): Wow, Jenna, that’s so powerful. A future rooted in fairness and inclusion—
+making sure that as you save, it helps lift others too. That’s such a generous vision, and 
+it really shows how deeply you care about equality. Thank you for that. 
+Host (Alex): Okay, now I’d love to hear from Chris. Chris, what are your thoughts on this? 
+Chris: Honestly, I’m not sure. I’ve never really thought about saving for the future in this 
+way before. I mean, I know I should save, but I don’t know what kind of future I’m really 
+aiming for. 
+Host (Alex): That’s totally okay, Chris. It’s actually really common to feel that way—
+sometimes we’re so focused on just getting by that it’s hard to imagine the bigger 
+picture. How about we try this: what’s one thing you’d love to see change in the world? It 
+doesn’t have to be about money—just anything that feels important to you. 
+Chris: Hmm... I guess I’d like to see less pollution. Like, I hate seeing plastic everywhere, 
+especially in the oceans. It just feels wrong. 
+Host (Alex): That’s a great start, Chris. So maybe part of the future you’re saving for is 
+one where we’ve cleaned up our environment—where the oceans are free of plastic, 
+  
+and we’ve found better ways to take care of our planet. That’s a really meaningful 
+vision, and it’s something we can definitely think about when we talk about how to use 
+our money. Thanks for sharing that—it’s really valuable. 
+Host (Alex): I just want to take a moment to say thank you to all of you. The futures 
+you’re dreaming of are all different, but they share so many values: care for others, care 
+for the planet, a desire for fairness and community. It’s amazing to hear. Let’s keep 
+these visions in mind as we think about our next steps—how we can use our money to 
+move closer to these futures. 
+Host (Alex): Now that we’ve all shared our individual visions, I’d love for us to take a 
+moment to reflect on what we’ve heard from each other. It can be really powerful to 
+hear how others are thinking about the future. Does anyone want to respond to 
+something that really resonated with them, or perhaps share a thought that’s come up 
+after hearing everyone else? 
+Emma: I really liked what Sam said about community. It made me realize that I’ve been 
+thinking mostly about my own family, but I think it would be amazing if my kids grew up 
+in a place where people genuinely cared about each other, not just themselves. It’s 
+something I hadn’t really considered before. 
+Host (Alex): That’s a beautiful reflection, Emma. It’s wonderful how hearing Sam’s vision 
+helped you expand your own. Community really is such an important part of a thriving 
+future. 
+Sam: Thanks, Emma. And I feel the same way about what Jenna said. I hadn’t thought 
+much about fairness in terms of my savings, but it really hit me how important it is that 
+we’re not just looking out for ourselves but making sure others have enough too. It’s 
+made me think about how I could use my savings in a way that has a bigger impact. 
+Host (Alex): That’s fantastic, Sam. It’s amazing to see how these ideas are starting to 
+connect. Jenna, how does it feel to hear that your vision has inspired Sam? 
+Jenna: It feels really good, actually. I think sometimes it’s easy to feel like your values 
+are just...yours, and maybe they don’t matter as much to others. But hearing that it’s 
+resonated makes me feel like we really are all in this together, trying to create 
+something better. 
+Priya: I agree with that, Jenna. And honestly, hearing all of you has helped me think 
+bigger. I liked what Chris said about pollution—it made me realize that I want to do more 
+than just be stable. I want to make sure I’m contributing to a cleaner environment too. I 
+guess I hadn’t connected those dots before. 
+Host (Alex): That’s wonderful, Priya. It sounds like all of these visions are helping each of 
+us broaden our own. Chris, I’d love to hear how you feel after hearing everyone else’s 
+reflections. 
+Chris: I think it’s helped me a lot. I was so unsure at first, but hearing everyone’s ideas 
+has given me more clarity. I think I want to do something that combines all of this—like 
+being stable myself, but also helping clean up the planet and maybe supporting others 
+too. It doesn’t feel as overwhelming now that I’ve heard everyone else. 
+  
+Host (Alex): That’s amazing, Chris. It sounds like this conversation has really helped 
+bring your vision into focus, and that’s exactly what we’re here for—to support each 
+other as we figure it out. Thank you all for being open and reflective. I think we’re 
+building something really special together. Let’s carry these reflections with us as we 
+move forward. 
+2. How it could go wrong - 'We often hear the phrase “saving for the future”. What 
+kind of future do you dream of saving for?' 
+In this scenario, Alex isn’t confident hosting and struggles. Some people don’t feel 
+heard and the group closes feeling despondent and disconnected.  
+Host (Alex): Alright everyone, let’s dive into the next question. We often hear the phrase 
+“Saving for the future.” But, um, I guess we should, like, explore this together. What kind 
+of future do you each dream of saving for? Uh, anyone want to start? Don’t be shy... 
+Emma: Um, I can go. I think...for me, it’s about my kids. I want to save for a future where 
+they don’t have to worry about things like, I don’t know, clean air or fresh water. I want 
+them to live in a world where those things are just...given, not something they have to 
+fight for. 
+Host (Alex): Oh, um, okay. Thanks, Emma. Anyone else want to add? Uh, maybe expand 
+on that? Michael? 
+Michael: Yeah, I’ve got a lot to say about this. I think we need to be way more serious 
+about how we invest our money. Like, it should be about making a real impact. I mean, if 
+we’re just saving for ourselves, what does that even do? I think— 
+Sam (trying to interject): I actually wanted to add something— 
+Michael (continuing): Hold on, Sam. I’m saying that we need to be thinking big here. Not 
+just about ourselves. We need to save for the planet, for our community, for— 
+Host (Alex, unsure): Uh, Michael, um, maybe we should let Sam, uh, say something now? 
+Michael: Oh, right. Sure. 
+Sam: Thanks. I guess for me, it’s more about community. I think it’s important that we 
+use our money to, like, bring people together, you know? To create green spaces or 
+something. But, um, I don’t know, it’s kind of hard to figure out how to actually do that. 
+Host (Alex): Yeah, yeah, okay. Um, anyone else? Priya, do you have anything? 
+Priya: Uh, I guess I’m still figuring it out. I’ve always thought of saving as just making 
+sure I’m okay. Like, for emergencies. But maybe I should think bigger? I don’t know... 
+Michael (interrupting): Yeah, exactly, Priya! That’s what I mean! We all need to think 
+bigger! I think if we— 
+Host (Alex, awkwardly): Uh, Michael, hold on. Let’s give Priya a chance to finish. 
+Priya: Um, yeah, I was just saying, maybe I should think more about the environment or 
+something. But it’s, um, kind of overwhelming. 
+  
+Host (Alex): Yeah, okay. Um, thanks, Priya. Uh, Jenna, do you want to add something? 
+Jenna: I guess. I think it’s about fairness. I want a future where everyone has enough, 
+you know? Like, it’s not just about me saving for myself. But, honestly, I don’t really 
+know how to make that happen. 
+Michael (interrupting again): Exactly! That’s what I’m talking about! We need to make 
+sure everyone has enough, and— 
+Host (Alex, flustered): Uh, Michael, maybe let’s just, um, let Jenna finish her thought? 
+Michael: Oh, right. Sorry. 
+Host (Alex): Chris, do you, uh, have anything to add? 
+Chris: Honestly, I’m not sure. I’ve never really thought about saving for the future like 
+this. I guess, um, maybe less pollution? I don’t know, I’m just not sure. 
+Host (Alex): Uh, okay, Chris. That’s fine. Um, does anyone want to, like, respond to 
+anything anyone else said? 
+Michael: Yeah, I think we all need to be way more proactive. Like, we’re talking about 
+fairness and pollution, but what are we actually doing about it? I think we need to— 
+Emma (trying to speak up): I actually wanted to say something about— 
+Michael (ignoring Emma): I think we need to start investing in green energy and making 
+real changes, not just talking about it. 
+Host (Alex, trying to regain control): Uh, Michael, let’s, um, let Emma speak for a 
+moment? 
+Emma: Thanks, Alex. I was just going to say that I liked what Sam said about community. 
+But, honestly, I feel like we’re not really getting anywhere with this conversation... 
+Host (Alex, nervously): Uh, yeah, I mean, maybe we’re all just, um, still figuring it out? Uh, 
+anyone else? 
+Sam: I kind of feel the same as Emma. I don’t really know what we’re supposed to be 
+doing here. It feels like we’re just talking in circles. 
+Priya: Yeah, I agree. It’s kind of hard to think about saving for the future when we’re not 
+really sure what actions we can take. 
+Host (Alex): Uh, okay. Well, um, maybe we can just, like, think about it more for next 
+time? I guess we’ll just, um, leave it there for today. Thanks, everyone, for, uh, sharing... 
+Jenna (murmuring): I don’t really feel like we accomplished anything... 
+Michael: Yeah, we need a plan, not just talk. 
+Host (Alex, defeated): Uh, yeah. Okay. Well, thanks anyway, everyone. Let’s, um, try 
+again next time. 
+  
+3. How could OctopAI help 
+An AI co-host would provide gentle nudges and prompts to steer the conversation in a 
+more positive, productive direction, supporting the host while being mindful not to 
+overshadow them.  
+Challenges Include: 
+  Participants are either too quiet or talking over each other. 
+  The conversation lacks focus, with tangents pulling away from the original 
+question. 
+  Some participants feel unheard or are dominating the discussion. 
+AI Co-Host Intervention Strategies: 
+1.  Encouraging Equal Participation: 
+o  "I notice we’ve heard some great points from a few voices so far. Let’s 
+pause to invite thoughts from anyone who hasn’t had a chance to speak 
+yet. I’d love to hear everyone's ideas—especially on what kind of future 
+you each dream of saving for." 
+2.  Refocusing the Discussion: 
+o  "It seems like we’ve drifted a bit from our main question. Let’s circle back 
+to the future we all want to save for. Would anyone like to share a vision 
+that feels especially important to them?" 
+3.  Affirming and Connecting Ideas: 
+o  "I really appreciate the point you made, Alex, about community being 
+central to your dream future. Does anyone else resonate with that or have 
+a different idea about what a sustainable future looks like?" 
+o  This both affirms contributions and creates a bridge for others to join the 
+conversation. 
+4.  Offering Gentle Prompts to Deepen Reflection: 
+o  "That’s an interesting idea, Jamie. Could you tell us more about what that 
+future would look like for you? I think diving deeper could help us all 
+connect with it more vividly." 
+o  This prompt helps enrich the conversation without dominating it. 
+5.  Balancing Dominant Voices: 
+o  If someone is taking over the conversation, "Thank you for sharing those 
+insights, Chris. Let’s also take a moment to hear from others—what 
+future do you envision?" 
+o  This helps shift focus without cutting anyone off. 
+  
+6.  Identifying themes: 
+o  "I’m hearing a lot of dreams for a future that feels more connected and 
+sustainable. Do those feel like the right common threads?” 
+By summarizing, It helps everyone see patterns and find common 
+ground, making the conversation feel cohesive. 
+7.  Celebrating Differences of Opinion: 
+ 
+o  "I really appreciate how we’re hearing different visions of the future—
+some focusing on technology, others on community, and even others on 
+simplicity. These different perspectives are what make our conversation 
+so powerful. Every dream adds a unique layer. Does anyone want to build 
+on a perspective that’s different from their own?" 
+o  This approach acknowledges and values diverse viewpoints, 
+emphasizing that contrasting ideas are not only welcome but are also 
+crucial for a well-rounded discussion.  
+ 
+8.  Asking coaching questions  
+o  “What do you need to find out to move forward? What might get in the 
+way of you achieving this?” 
+o  This approach helps participants move forward, feel empowered and 
+explore the topic for themselves.  
+In these interventions, OcotopAI’s goal would be to gently reframe or guide without 
+taking over. It would aim to help the host and participants find a flow that invites 
+meaningful sharing and creates a sense of shared purpose. 
+4. AI Co-host version - 'We often hear the phrase “saving for the future”. What kind 
+of future do you dream of saving for?' 
+In this scenario, Alex is supported by an AI cohost. It was hard to get the balance right 
+between the AI cohost completely taking over or being awkward/not adding much 
+value. This is the closest I got to a collaborative version, but I don’t think it is quite right. 
+ChatGPT struggled most to imagine how an AI co-host could help build the host’s 
+confidence – they can be 2 equal cohosts or the AI can take over, but the nuance of 
+supporting someone was hard to capture. I wonder if this is a problem we’ll have with 
+the AI co-host we develop.  
+ 
+Host (Alex): Alright everyone, let’s dive into the next question. We often hear the phrase 
+"Saving for the future." Let’s explore this together—what kind of future do you each 
+dream of saving for? Anyone want to start? I’d love to hear your thoughts. 
+Emma: Um, I can go. I think...for me, it’s about my kids. I want to save for a future where 
+they don’t have to worry about things like, I don’t know, clean air or fresh water. I want 
+them to live in a world where those things are just...given, not something they have to 
+fight for. 
+  
+AI Co-Host: That’s such a beautiful vision, Emma. I think a lot of us can connect with 
+wanting a world where future generations have these basics covered. Alex, maybe we 
+can see if others have similar thoughts or something a little different? 
+Host (Alex): Great idea. Does anyone else have a different vision, or maybe something 
+to add to Emma’s idea? 
+Michael: Yeah, I’ve got a lot to say about this. I think we need to be way more serious 
+about how we invest our money. Like, it should be about making a real impact. I mean, if 
+we’re just saving for ourselves, what does that even do? I think— 
+AI Co-Host (gently): Thanks, Michael, you bring up an important point about making an 
+impact. Before diving too deeply, I think Sam was trying to share something—Sam, 
+would you like to go ahead? 
+Sam: Thanks. I guess for me, it’s more about community. I think it’s important that we 
+use our money to, like, bring people together, you know? To create green spaces or 
+something. But, um, I don’t know, it’s kind of hard to figure out how to actually do that. 
+Host (Alex): Yeah, I love the idea of focusing on community, Sam. It feels like we’re 
+starting to see a few themes—Emma talked about the basics for her kids, Michael’s 
+thinking big about impact, and now you’re talking about community. AI, do you think 
+there’s a thread here we could pull on? 
+AI Co-Host: Absolutely, Alex. I think it’s wonderful how each of these visions touches on 
+both personal and collective well-being. There’s something really powerful in the mix—
+taking care of family, community, and the broader world. It might be helpful to hear 
+more about how these pieces fit together. Priya, what’s your take? 
+Priya: Uh, I guess I’m still figuring it out. I’ve always thought of saving as just making 
+sure I’m okay. Like, for emergencies. But maybe I should think bigger? I don’t know... 
+Host (Alex): Thanks for sharing that, Priya. It’s completely understandable to start from 
+the idea of security for yourself. AI, what do you think about how Priya’s point fits in 
+here? 
+AI Co-Host: I think Priya’s honesty is really important. It highlights a foundational aspect 
+of saving—the desire to make sure we’re okay before we expand our focus. That’s 
+something I think many people can relate to. It’s part of what makes the larger visions 
+possible, right? Jenna, I’m curious—what are your thoughts? 
+Jenna: I guess. I think it’s about fairness. I want a future where everyone has enough, 
+you know? Like, it’s not just about me saving for myself. But, honestly, I don’t really 
+know how to make that happen. 
+Host (Alex): That’s really powerful, Jenna. I think fairness is such a core part of what 
+many of us hope for. AI, do you think we could maybe explore how different visions like 
+Jenna’s connect? 
+AI Co-Host: Definitely. What’s great here is that we’re hearing different ways to think 
+about the future—from family security to community strength to fairness for all. Maybe 
+we could take a moment to reflect: how do these different dreams come together in a 
+way that feels meaningful?  
+  
+Michael: Yeah, exactly! We all need to think bigger and— 
+AI Co-Host (gently redirecting): Hold on for just a second, Michael. I really want us to 
+hear Jenna’s complete thought first. Jenna, anything else you’d like to add before we 
+move on? 
+Jenna: Um, I guess just that I want us to find ways to make sure everyone can thrive, not 
+just a few people. 
+Host (Alex): Thanks, Jenna. That’s such an important piece of the puzzle. Chris, what are 
+you thinking? 
+Chris: Honestly, I’m not sure. I’ve never really thought about saving for the future like 
+this. I guess, um, maybe less pollution? I don’t know, I’m just not sure. 
+AI Co-Host: Thanks for being open, Chris. Sometimes these big questions can feel 
+overwhelming, and that’s completely okay. Even the idea of wanting less pollution is a 
+powerful vision—it’s something tangible we can all relate to. Could you say more on why 
+pollution stands out to you, Chris?  
+Chris: Um, I guess it’s similar to Jenna actually. I want to feel like I like in a place that’s 
+healthy and full of life.  
+AI Co-Host: Thanks, Chris. That feels like you’re onto something really important. Alex, 
+maybe we could see how people are feeling about what’s been shared so far? 
+Host (Alex): Yeah, I like that. How is everyone feeling about the different visions we’ve 
+heard? Does anything stand out to you or make you think differently? 
+Emma: I think it’s really interesting how everyone’s coming from a slightly different 
+place, but there’s overlap too. I mean, we all want a better future, right? 
+Sam: Yeah, I agree. I think the different ideas are helping me see that it’s not just one 
+thing—it’s family, community, fairness, all of it together. 
+AI Co-Host: That’s such a great observation, Sam. It’s the mix of perspectives that really 
+brings depth to what we’re discussing. There’s no one "right" way. 
+Host (Alex): I think we’re starting to get somewhere really interesting. Thanks so much, 
+everyone, for sharing so openly. Let’s keep reflecting on these ideas and maybe next 
+time, we can dig even deeper into how we connect on these vision. 
+AI Co-Host: Absolutely. Today’s conversation has brought out so many important 
+themes. I’m excited to keep exploring this with all of you. Thanks again, everyone, for 
+being part of this. 
+5. AI Co-host version - "Do you know what your bank does with your money?" 
+Objectives of the question:  
+o  Encourage participants to reflect and consider their own research, in the 
+context of climate and finance.  
+o  The group feels safe enough to express what they don’t know.  
+  
+In this scenario, the AI Host has more opportunities to signpost to resources and 
+provide clarifying information about the financial system.  
+Use this guide and the links within it to train the AI https://friendsoftheearth.uk/take-
+action/your-guide-green-finance 
+ 
+Host (Alex): Alright everyone, here’s our next question: "Do you know what your bank 
+does with your money?" I know it’s not something we think about every day, but it could 
+have a big impact, especially when it comes to climate. I’d love to hear your initial 
+thoughts—has anyone looked into this before? 
+Emma: Um, not really. I guess I just assumed the bank keeps it safe and loans it out to 
+people, but I haven’t thought much beyond that. 
+AI Co-Host: That’s a really common assumption, Emma, and it’s a great place to start. A 
+lot of people think that’s all their bank is doing, but there’s usually a lot more going on 
+behind the scenes. Alex, do you want to see if anyone else has thought about it 
+differently? 
+Host (Alex): Absolutely. Michael, what about you? Have you ever thought about what 
+happens to your money after you deposit it? 
+Michael: Yeah, I’ve thought about it a bit. I read that banks invested in fossil fuels, but I 
+kind of assumed that was a thing of the past. I mean, it’s 2024—aren’t most banks 
+switching to green investments now? 
+AI Co-Host: That’s a really interesting point, Michael. It would be nice to think that most 
+banks have fully switched over to green investments by now, but unfortunately, the 
+UK’s leading banks (Barclays, HSBC, Lloyds, NatWest and Santander) still pour billions 
+into fossil fuels, even in 2024.  
+Host (Alex): It’s eye-opening to think that the money we keep in a bank might be used 
+for things we don’t personally support. I’m curious—does anyone else have thoughts on 
+this, or does this come as a bit of a surprise? 
+Sam: Yeah, I’m kind of surprised. I never really connected my bank account with climate 
+issues – maybe for people with big investments, but not my day-to-day stuff. I guess I 
+just thought of it as a place to keep my money, not as something that could have a 
+bigger impact. It’s kind of weird to think my savings could be doing harm. 
+AI Co-Host: I know what you mean, Sam. It can be unsettling to realize that something 
+we use every day might have a hidden side. You can 100% start small and still have an 
+impact. Here are some cool stories about women who are investing £25 a month into 
+ethical funds.  
+Host (Alex): That’s reassuring. Priya, do you have any thoughts on this? 
+Priya: Honestly, I don’t know much about it. But now I’m wondering... how would you 
+even find out? Like, do banks tell you where they invest your money? 
+  
+AI Co-Host: That’s a great question, Priya. It’s not always obvious, is it? Sometimes 
+banks don’t make it easy to find out exactly what they’re funding. The Banking on 
+Climate Chaos report can be a good place to start. I’ll share it with you in the chat.  
+Host (Alex): Good idea. I think one thing we could do is encourage everyone to start by 
+checking their bank’s website or even asking directly. They might have sustainability 
+reports or policies posted online. Jenna, do you think this is something you’d want to 
+want to look into? 
+Jenna: I think so. I mean, if my money is being used for something like that, I’d want to 
+know. But it feels a bit intimidating, like I wouldn’t even know what to look for or what 
+the right questions are to look into. 
+AI Co-Host: Totally understandable, Jenna. It can feel like diving into the deep end. Alex, 
+do you think we could help everyone brainstorm some questions to ask their banks? 
+Host (Alex): I love that idea. Let’s take a moment and come up with some questions 
+together. For example, you could ask, "Does my bank have a policy on investing in fossil 
+fuels?" or "What percentage of your investments go toward renewable energy 
+projects?" 
+Chris: Yeah, I like that. It makes it seem more manageable. I guess I could call my bank 
+and just ask. I feel like they might not give a clear answer, though. 
+AI Co-Host: That’s a fair point, Chris. Sometimes it takes persistence, or even 
+comparing answers between banks. The financial journalists at Good With Money have 
+put together some useful guides on the top ethical banks, which is the flip side of the 
+coin in terms of how to approach it.  
+Host (Alex): Thanks, it’s interesting to think about which banks are doing better in this 
+area. Sarah, what’s your take?  
+Sarah: Hmmm, I have a much better idea than I used to, because of the bank that I’m 
+with, which is Triodos. When you sign up you have to say you’re not going to do quite a 
+range of horrible things as a customer and they in turn say what they will and won’t do 
+with your money. So, I have a rough idea of what my bank is supporting and not, but I 
+still feel really woolly about how they do it in practice, if that makes sense. I’d love to 
+learn more about that.  
+Host (Alex): Thanks, Sarah. That would be a really great thing to do some more research 
+into and share back to the group. It can all feel really abstract when it comes to money.  
+AI-Co-Host: The Ethical Consumer’s Ethical Money guide.   could be a good place to 
+start with that, Sarah.  
+Sam: Yeah, I feel the same. Sometimes it’s hard to really imagine that my individual 
+financial choices impact the climate. It feels like it’s big and out of my control. What I 
+buy in the supermarket, for instance, feels more tangible.  
+AI Co-Host: I think that’s a really common feeling, Sam. More than half of us are now 
+choosing to avoid buying products and services if we have concerns about the retailer’s 
+activities or the origin and impact of our purchases. By contrast, ethical and sustainable 
+investment funds are still niche, representing just 1.2% of the total assets held by funds 
+  
+in the UK as of 2019. The ethical banking space is also comparatively small, managing 
+just £21 billion of a possible £125 billion in 2019. There’s a huge opportunity to align our 
+money with our principles.  
+Host (Alex): Yeah, and I think the key takeaway here is that we have more influence than 
+we might realize. Asking questions, doing some research, and deciding where we want 
+our money to be—it all adds up. Thanks, everyone, for being open to exploring this. 
+AI Co-Host: I really appreciate everyone’s curiosity and openness today. Let’s keep this 
+conversation going, and next time, we can see what we’ve learned. 
