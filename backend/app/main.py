@@ -1,3 +1,4 @@
+from pathlib import Path
 from fastapi import FastAPI
 from api.chat import router as chat_router
 from api.hyde import router as hyde_router
@@ -7,4 +8,5 @@ app = FastAPI()
 app.include_router(chat_router)
 app.include_router(hyde_router)
 
-load_documents()
+if not Path("./database/chromadb/chroma.sqlite3").exists():
+    load_documents()
