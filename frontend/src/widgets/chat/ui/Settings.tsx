@@ -14,10 +14,30 @@ import { Rabbit, Bird, Turtle } from "lucide-react";
 import { type ModelSettings, type MessageSettings } from "@/shared/types/interfaces";
 import { useModelSettingsContext } from "@/shared/context/model-settings-provider";
 
+const renderSelectItem = (name: string, modelCode: string, description: string, Icon: React.ComponentType) => (
+    <SelectItem value={modelCode}>
+        <div className="flex items-start gap-3 text-muted-foreground">
+            <Icon className="size-5" />
+            <div className="grid gap-0.5">
+                <p>
+                    <span className="font-medium text-foreground">
+                        {name} ({modelCode})
+                    </span>
+                </p>
+                <p className="text-xs" data-description>
+                    {description}
+                </p>
+            </div>
+        </div>
+    </SelectItem>
+);
+
 const ModelSettings = () => {
     const anthropic_models = {
-        "claude_3_5_sonnet": 'claude-3-5-sonnet-20240620',
+        "claude_3_5_sonnet": 'claude-3-5-sonnet-20241022',
+        "claude_3_5_haiku": 'claude-3-5-haiku-20241022',
         "claude_3_opus": 'claude-3-opus-20240229',
+        "claude_3_5_sonnet_old": 'claude-3-5-sonnet-20240620',
         "claude_3_sonnet": 'claude-3-sonnet-20240229',
         "claude_3_haiku": 'claude-3-haiku-20240307',
     };
@@ -45,66 +65,12 @@ const ModelSettings = () => {
                             <SelectValue placeholder="Select a model" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value={anthropic_models.claude_3_haiku}>
-                                <div className="flex items-start gap-3 text-muted-foreground">
-                                    <Bird className="size-5" />
-                                    <div className="grid gap-0.5">
-                                        <p>
-                                            <span className="font-medium text-foreground">
-                                                Claude 3 Haiku
-                                            </span>
-                                        </p>
-                                        <p className="text-xs" data-description>
-                                            Performance and speed for efficiency.
-                                        </p>
-                                    </div>
-                                </div>
-                            </SelectItem>
-                            <SelectItem value={anthropic_models.claude_3_5_sonnet}>
-                                <div className="flex items-start gap-3 text-muted-foreground">
-                                    <Rabbit className="size-5" />
-                                    <div className="grid gap-0.5">
-                                        <p>
-                                            <span className="font-medium text-foreground">
-                                                Claude 3.5 Sonnet
-                                            </span>
-                                        </p>
-                                        <p className="text-xs" data-description>
-                                            Our fastest model for general use cases.
-                                        </p>
-                                    </div>
-                                </div>
-                            </SelectItem>
-                            <SelectItem value={anthropic_models.claude_3_sonnet}>
-                                <div className="flex items-start gap-3 text-muted-foreground">
-                                    <Rabbit className="size-5" />
-                                    <div className="grid gap-0.5">
-                                        <p>
-                                            <span className="font-medium text-foreground">
-                                                Claude 3 Sonnet
-                                            </span>
-                                        </p>
-                                        <p className="text-xs" data-description>
-                                            Our fastest model for general use cases.
-                                        </p>
-                                    </div>
-                                </div>
-                            </SelectItem>
-                            <SelectItem value={anthropic_models.claude_3_opus}>
-                                <div className="flex items-start gap-3 text-muted-foreground">
-                                    <Turtle className="size-5" />
-                                    <div className="grid gap-0.5">
-                                        <p>
-                                            <span className="font-medium text-foreground">
-                                                Claude 3 Opus
-                                            </span>
-                                        </p>
-                                        <p className="text-xs" data-description>
-                                            The most powerful model for complex computations.
-                                        </p>
-                                    </div>
-                                </div>
-                            </SelectItem>
+                            {renderSelectItem("Claude 3.5 Sonnet", anthropic_models.claude_3_5_sonnet, "Our fast model for general use cases.", Rabbit)}
+                            {renderSelectItem("Claude 3.5 Haiku", anthropic_models.claude_3_5_haiku, "Our fastest model for general use cases.", Bird)}
+                            {renderSelectItem("Claude 3.5 Sonnet (old)", anthropic_models.claude_3_5_sonnet_old, "Our fast model for general use cases.", Rabbit)}
+                            {renderSelectItem("Claude 3 Haiku", anthropic_models.claude_3_haiku, "Performance and speed for efficiency.", Bird)}
+                            {renderSelectItem("Claude 3 Sonnet", anthropic_models.claude_3_sonnet, "Our fastest model for general use cases.", Rabbit)}
+                            {renderSelectItem("Claude 3 Opus", anthropic_models.claude_3_opus, "The most powerful model for complex computations.", Turtle)}
                         </SelectContent>
                     </Select>
                 </div>

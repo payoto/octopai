@@ -16,7 +16,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "boilerplate app",
+  title: "OctopAI",
   description: "basic functionality with a modern stack",
 };
 
@@ -34,7 +34,7 @@ export default function RootLayout({
             <Navbar />
             <div className="flex flex-col z-0">
               <header className="sticky top-0 z-10 flex h-[57px] items-center gap-1 border-b bg-background px-4">
-                <h1 className="text-xl font-semibold">boilerplate</h1>
+                <h1 className="text-xl font-semibold">OctopAI</h1>
               </header>
               <main className="flex-grow overflow-auto">
                 {children}

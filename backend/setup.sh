@@ -39,9 +39,11 @@ fi
 echo -e "${GRAY}Installing the required packages${NC}"
 
 source .venv/bin/activate && echo -e "${GREEN}✅ .venv/bin/activate${NC}"
-pip install -r requirements.txt && echo -e "${GREEN}✅ requirements.txt${NC}"
+python -m ensurepip
+
+python -m pip install -r requirements.txt && echo -e "${GREEN}✅ requirements.txt${NC}"
 
 
 
 echo -e "${GRAY}\n--- --- --- --- ---\n${NC}"
-echo -e "${GREEN}✅ Setup complete\n${NC}"%                                                                                        
+echo -e "${GREEN}✅ Setup complete\n${NC}"%
