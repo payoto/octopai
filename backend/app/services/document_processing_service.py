@@ -1,11 +1,11 @@
-from services.chromadb_serivce import ChromaDBService
+from core.database import get_chroma_db_service
 import os
 
 class DocumentProcessor:
     def __init__(self):
         """Initialize DocumentProcessor"""
-        self.db = ChromaDBService()
-    
+        self.db = get_chroma_db_service()
+
     def load_txt_from_dir(self) -> list:
         documents_path = "./database/documents"
         documents = []
@@ -14,9 +14,9 @@ class DocumentProcessor:
                 with open(os.path.join(documents_path, filename), "r") as file:
                     documents.append({"text": file.read()})
         return documents
-    
-    def split_text(self, text, 
-                   chunk_size=256, 
+
+    def split_text(self, text,
+                   chunk_size=256,
                    chunk_overlap=20):
         chunks = []
         start = 0
@@ -26,7 +26,7 @@ class DocumentProcessor:
             chunks.append(text[start:end])
             start = end - chunk_overlap
         return chunks
-    
+
     def process_documents(self, documents: list) -> list:
         """Process documents."""
         chunked_txt = []
@@ -36,17 +36,17 @@ class DocumentProcessor:
             for chunk_id, chunk in enumerate(chunks):
                 chunked_txt.append(
                     {
-                        'id': f"{file_id}-{chunk_id}", 
+                        'id': f"{file_id}-{chunk_id}",
                         'text': chunk,
                     }
                 )
         return chunked_txt
 
-    
+
     def add_documents_to_db(self, chunked_txt: list):
         """Add documents to database."""
         for chunk in chunked_txt :
-            self.db.collection.upsert(
+            self.db.upsert(
                     ids=chunk['id'],
                     documents=chunk['text'],
             )

@@ -7,4 +7,4 @@ app = FastAPI()
 app.include_router(chat_router)
 app.include_router(hyde_router)
 
-# load_documents()
+load_documents()

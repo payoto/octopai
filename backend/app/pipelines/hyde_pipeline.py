@@ -1,30 +1,30 @@
-from services.chromadb_serivce import ChromaDBService
+from core.database import get_chroma_db_service
 from services.anthropic_service import client
 
 class HydePipeline:
     def __init__(self):
         """Initialize HydePipeline"""
         self.anthropic = client
-        self.db = ChromaDBService()
-    
+        self.db = get_chroma_db_service()
+
     def generate_response(self, query: str) -> str:
         """Generate hypotetical response from query."""
         response = self.anthropic.messages.create(
             model="claude-3-5-haiku-20241022",
             max_tokens=1024,
             messages=[{
-                "role": "user", 
+                "role": "user",
                 "content": query
                 }],
         )
         return response.content[0].text
-    
+
     def anthropic_stream_response(self, query: str):
         stream = client.messages.create(
             model="claude-3-5-haiku-20241022",
             max_tokens=1024,
             messages=[{
-                "role": "user", 
+                "role": "user",
                 "content": query
             }],
             stream=True,
@@ -41,9 +41,7 @@ class HydePipeline:
         print(f"Hyde response: {hyde_response}")
         
         search_query = f"{query} {hyde_response}"
-        results = self.db.query(search_query)
-        print(f"Relevant documents: {results['documents']}")
-        
+        results = self.db.query(query_texts=search_query, n_results=5, where=None)
         relevant_chunks = [txt for sublist in results["documents"] for txt in sublist]
         context = "\n\n".join(relevant_chunks)
         print(f"Context: {context}")
