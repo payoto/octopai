@@ -5,6 +5,8 @@ anthropic
 chromadb
 nodejs
 sentence-transformers
-nltk 
-scikit-learn 
+nltk
+scikit-learn
 numpy
+typing_extensions
+pandas

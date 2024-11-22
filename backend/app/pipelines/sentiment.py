@@ -2,12 +2,29 @@
 
 
 """
-from typing import TypedDict, List, Optional, Union
+from typing import TypedDict, List, Optional, Union, Dict
 from typing_extensions import NotRequired  # For Python <3.11
 import argparse
 import json
 import sys
 from enum import Enum
+import time
+import anthropic
+import os
+
+
+from enum import Enum
+import pandas as pd
+
+from pathlib import Path
+import dotenv
+
+
+current_folder = Path(__file__).resolve().parent
+backend_root = current_folder.parents[1]
+dotenv.load_dotenv(backend_root / ".env")
+
+client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
 class Word(TypedDict):
     text: str
@@ -80,95 +97,94 @@ def extract_last_minutes(transcript: Transcript, seconds: float) -> List[Transcr
     return last_segments
 
 
-import anthropic
-from typing import List, Dict, Union
-import os
-from enum import Enum
-import json
-from services.anthropic_service import client
 
-class Sentiment(Enum):
-    POSITIVE = "positive"
-    NEGATIVE = "negative"
-    NEUTRAL = "neutral"
 
-EXAMPLE_SENTIMENTS = {
-    "disengaged": {
-        "explanation": "The user seems disengaged and uninterested in the conversation.",
-        "examples": [
-            "I don't care about this.",
-            "Sure.",
-            "Whatever."
-        ]
-    },
-    "confused": {
-        "explanation": "The user appears confused and unsure about the topic.",
-        "examples": [
-            "I'm not sure what you mean.",
-            "Can you explain that again?",
-            "I don't understand."
-        ]
-    },
-    "positive": {
-        "explanation": "The user is expressing positive sentiment and satisfaction.",
-        "examples": [
-            "Interesting!",
-            "I hadn't thought of that before.",
-            "Great idea!",
-            "I'll try that",
-        ]
-    },
-    "conflictual": {
-        "explanation": "The user is expressing disagreement or conflict.",
-        "examples": [
-            "That's really not a good idea.",
-            "Why would you do that?",
-            "That's the stupidest idea I've heard all day. (Dismissive & Belittling)",
-            "Let me stop you right there because you're completely wrong. (Aggressive Interruption)",
-            "Everyone knows you only got this position because of politics. (Personal Attack)"
-            "Oh, look who finally decided to contribute something. (Passive-Aggressive)",
-        ]
-    }
+
+SENTIMENT_DESCRIPTIONS = {
+    "disengaged": "The user seems distracted and uninterested in the conversation, their comments might be off-topic.",
+    "confused": "The user appears confused and unsure about the topic.",
+    "positive": "The user is expressing positive sentiment and satisfaction.",
+    "nervous": "The person is unsure, and hesitates.",
+    "connected": "The user is feeling understood by the other participants, has a sense of community",
+    "conflictual": "The user is expressing disagreement or conflict.",
+    "neutral": "The person is not displaying any particular emotion.",
 }
 
-def format_sentiment_examples_into_prompt(examples=EXAMPLE_SENTIMENTS):
+class Sentiment(Enum):
+    DISCONNECTED = "disconnected"
+    CONFUSED = "confused"
+    POSITIVE = "positive"
+    NERVOUS = "nervous"
+    CONNECTED = "connected"
+    CONFLICTUAL = "conflictual"
+    NEUTRAL = "neutral"
+
+class SentimentClassificationOutput(TypedDict):
+    sentiment: Sentiment | None
+    model_sentiment: str
+    confidence: float
+    explanation: str
+    usage: Dict[str, Union[int, float]]
+    duration: float
+
+
+def load_sentiment_examples(csv_path: str) -> Dict[str, Dict[str, Union[str, List[str]]]]:
+    df = pd.read_csv(csv_path)
+    examples = {}
+
+    for sentiment in df['sentiment'].unique():
+        examples[sentiment] = {
+            'explanation': SENTIMENT_DESCRIPTIONS[sentiment],
+            'examples': df[df['sentiment'] == sentiment]['example'].tolist()
+        }
+
+    return examples
+
+
+
+
+def format_sentiment_examples_into_prompt(examples: Dict):
     example_str = ""
     for sentiment, data in examples.items():
         example_separator = '- \n'
-        example_str += f"""{sentiment.capitalize()}: {data['explanation']}"
+        example_str += f"""{sentiment.capitalize()}: {data['explanation']}
 Examples:
 - {example_separator.join(data['examples'])}
 """
+    return example_str
 
 
 
 class SentimentClassifier:
-    def __init__(self):
-        """
-        Initialize the sentiment classifier with an Anthropic API key.
+    def __init__(self, sentiment_csv_path: str):
+        self.examples = load_sentiment_examples(sentiment_csv_path)
 
-        Args:
-            api_key (str, optional): Anthropic API key. If not provided, will look for ANTHROPIC_API_KEY env variable.
-        """
-        # enumerate all sentiments listed in enum
-        sentiments = ", ".join(s.value for s in Sentiment)
-
-        self.client = client
         self.system_prompt = """We need to analyse sentiment in the conversation.
         To do that you need to classify the sentiment of the last message in the conversation.
         You are receiving transcripts of the conversation. Call the sentiment_tracker with the sentiments you have identified.
         """
-
-        tools = [
+        self.user_prompt_format = """
+        Here is a conversation transcript, use it as context for what the sentiment of the last message is:
+        <transcript>
+        {transcript}
+        </transcript>
+        This is the message you need to classify:
+        <message>
+        {message}
+        </message>
+        """
+        self.tool_name = "sentiment_tracker"
+        self.model = "claude-3-5-haiku-20241022"
+        self.tools = [
             {
-                "name": "sentiment_tracker",
-                "description": """Keeps track of the sentiment of the conversation
-                """,
+                "name": self.tool_name,
+                "description": "Keeps track of the sentiment of the conversation",
                 "input_schema": {
                     "type": "object",
                     "properties": {
-                        "explanation": {"brief explanation of the classification that was made and highlight the key reason why it was chosen"},
-                        "sentiment": {"type": "string", "description": format_sentiment_examples_into_prompt(EXAMPLE_SENTIMENTS)},
+                        "explanation": {"type": "string", "description": "brief explanation of the classification that was made and highlight the key reason why it was chosen"},
+                        # TODO make an array
+                        "sentiment": {"type": "string", "description": format_sentiment_examples_into_prompt(self.examples)},
                         "confidence": {"type": "number", "description": "Confidence in the sentiment chosen, 0.0-1.0 (inclusive)"}
                     },
                     "required": ['explanation', 'sentiment', 'confidence']
@@ -178,7 +194,7 @@ class SentimentClassifier:
 
 
 
-    def classify_text(self, text: str) -> Dict[str, Union[str, float]]:
+    def classify_text(self, transcript: str, message: str) -> SentimentClassificationOutput:
         """
         Classify the sentiment of a single text.
 
@@ -188,70 +204,70 @@ class SentimentClassifier:
         Returns:
             dict: Dictionary containing sentiment classification, confidence score, and explanation
         """
-        message = f"Analyze the sentiment of the following text: {text}"
-
-        response = self.client.messages.create(
-            model="claude-3_-sonnet-20240229",
+        messages = [
+            {"role": "user",
+             "content": self.user_prompt_format.format(transcript=transcript, message=message)
+             }
+        ]
+        start = time.time()
+        response = client.messages.create(
+            model="claude-3-5-haiku-20241022",
             max_tokens=1024,
-            temperature=0,
+            temperature=0.5,
             system=self.system_prompt,
-            messages=[{"role": "user", "content": message}]
+            messages=messages,
+            tools=self.tools,
+            tool_choice = {"type": "tool", "name": self.tool_name}
         )
 
+        assert response.content
+        assert response.content[0].type == "tool_use"
+        assert response.content[0].name == "sentiment_tracker"
+        tool_input = response.content[0].input
+        raw_sentiment = str(tool_input["sentiment"]).lower()
         try:
-            result = json.loads(response.content[0].text)
-            return result
-        except json.JSONDecodeError:
-            raise ValueError("Failed to parse API response as JSON")
+            sentiment = Sentiment[raw_sentiment.upper()]
+        except KeyError:
+            sentiment = None
+        return SentimentClassificationOutput(**{
+            "sentiment": sentiment,
+            "model_sentiment": raw_sentiment,
+            "explanation": str(tool_input["explanation"]),
+            "confidence": float(tool_input["confidence"]),
+            "api_usage": response.usage.to_json(),
+            "duration": time.time() - start,
+        })
 
-    def batch_classify(self, texts: List[str], batch_size: int = 10) -> List[Dict[str, Union[str, float]]]:
-        """
-        Classify sentiment for multiple texts in batches.
-
-        Args:
-            texts (List[str]): List of texts to analyze
-            batch_size (int): Number of texts to process in each batch
-
-        Returns:
-            List[dict]: List of classification results for each text
-        """
-        results = []
-        for i in range(0, len(texts), batch_size):
-            batch = texts[i:i + batch_size]
-            batch_results = [self.classify_text(text) for text in batch]
-            results.extend(batch_results)
-        return results
-
-def main2():
-    # Example usage
-    classifier = SentimentClassifier()
-
-    # Single text classification
-    text = "I absolutely love this product! It exceeds all my expectations."
-    result = classifier.classify_text(text)
-    print(f"\nSingle text classification:")
-    print(f"Text: {text}")
-    print(f"Result: {json.dumps(result, indent=2)}")
-
-    # Batch classification
-    texts = [
-        "This is terrible, I want my money back!",
-        "The product arrived on time and works as expected.",
-        "I'm not sure how I feel about this yet."
-    ]
-    results = classifier.batch_classify(texts)
-    print(f"\nBatch classification results:")
-    for text, result in zip(texts, results):
-        print(f"\nText: {text}")
-        print(f"Result: {json.dumps(result, indent=2)}")
-
-if __name__ == "__main__":
-    main()
 
 
 def classify_sentiment(transcript: Transcript):
-    """
-    """
+    classifier = SentimentClassifier(str(current_folder / "sentiments.csv"))
+    transcript_str = ""
+    for segment in transcript[:-1]:
+        transcript_str += format_segment_for_llm(segment)
+    message = format_segment_for_llm(transcript[-1])
+    classification = classifier.classify_text(transcript_str, message)
+    context = {
+        "transcript": transcript_str,
+        "message": message,
+    }
+    return classification, context
+
+def classify_transcript_1by1(transcript: Transcript, output_file: Optional[str] = None) -> List[List[str]]:
+    classifications = []
+    try:
+        # classify each as if it was the last one
+        for i, _ in enumerate(transcript):
+            last_5mn = extract_last_minutes(transcript[:i+1], 300)
+            classification, context = classify_sentiment(last_5mn)
+            classifications.append([context["message"], classification])
+    finally:
+        if output_file:
+            print(f"Saving classifications to file {output_file}")
+            Path(output_file).write_text(json.dumps(classifications, indent=2))
+        else:
+            print(json.dumps(classifications, indent=2))
+    return classifications
 
 def load_transcript(file_path: str) -> Transcript:
     """Load a transcript from a JSON file."""
@@ -272,7 +288,8 @@ def main():
     )
 
     parser.add_argument(
-        'input_file',
+        '--input_file',
+        default=str(backend_root / "logs/transcripts/transcript_3.json"),
         type=str,
         help='Path to the transcript JSON file'
     )
@@ -297,12 +314,13 @@ def main():
     )
 
     args = parser.parse_args()
-
+    if args.output is None:
+        args.output = f"{args.input_file}-sentiment.json"
     # Load the transcript
     transcript = load_transcript(args.input_file)
 
     if args.verbose:
-        print(f"Loaded transcript with {len(transcript['segments'])} segments")
+        print(f"Loaded transcript with {len(transcript)} segments")
 
     return transcript, args
 
@@ -310,5 +328,4 @@ def main():
 
 if __name__ == "__main__":
     transcript, args = main()
-    for segment in extract_last_minutes(transcript, 300):
-        print(format_segment_for_llm(segment))
+    classify_transcript_1by1(transcript, args.output)
