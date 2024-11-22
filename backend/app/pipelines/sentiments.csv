@@ -1,0 +1,17 @@
+sentiment,example
+disengaged,I don't care about this.
+disengaged,Sure.
+disengaged,Whatever.
+confused,I'm not sure what you mean.
+confused,Can you explain that again?
+confused,I don't understand.
+positive,Interesting!
+positive,I hadn't thought of that before.
+positive,Great idea!
+positive,I'll try that
+conflictual,That's really not a good idea.
+conflictual,Why would you do that?
+conflictual,That's the stupidest idea I've heard all day.
+conflictual,Let me stop you right there because you're completely wrong.
+conflictual,Everyone knows you only got this position because of politics.
+conflictual,Oh look who finally decided to contribute something.

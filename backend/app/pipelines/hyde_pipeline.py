@@ -51,9 +51,11 @@ class HydePipeline:
         yield f"</hyde_response>"
         search_query = f"{question} {hyde_response}"
         yield f"<search_query>\n{search_query}\n</search_query>\n"
+
         results = self.db.query(query_texts=search_query, n_results=5, where=None)
         relevant_chunks = [txt for sublist in results["documents"] for txt in sublist]
         context = "\n\n".join(relevant_chunks)
+
         yield f"<context>\n{context}\n</context>\n"
         # TODO: refactor so that hyde only returns the context
         final_query = f"""
