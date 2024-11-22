@@ -1,10 +1,10 @@
 from typing import TypedDict
 import argparse
 import dataclasses
-import os
-import random
+from pprint import pprint
 from pathlib import Path
-from pipelines.transcript_processing import format_transcript_for_llm, load_transcript, merge_into_user_messages
+
+from ..pipelines.transcript_processing import format_transcript_for_llm, load_transcript, merge_into_user_messages
 
 current_folder = Path(__file__).resolve().parent
 backend_root = current_folder.parents[1]
@@ -25,27 +25,26 @@ class TaskBuilder:
     bad_responses: list[str] = dataclasses.field(default_factory=list)
     triggers: list[str] = dataclasses.field(default_factory=list)
 
-    def __post__init__(self):
-        folder = Path(self.name)
+    def __post_init__(self):
+        folder = Path(__file__).resolve().parent / self.name
         # Read each file and assign to the corresponding attribute
         self.name = folder.name
         for file in ["answer_format", "description"]:
             file_path = folder / f"{file}.txt"
-            if file_path.exists():
-                setattr(self, file, file_path.read_text().strip())
+            setattr(self, file, file_path.read_text().strip())
+
 
         for file in ["good_responses", "bad_responses", "triggers"]:
             file_path = folder / f"{file}.txt"
-            if file_path.exists():
-                setattr(
-                    self,
-                    file,
-                    [
-                        line.strip()
-                        for line in file_path.read_text().strip().split("\n")
-                        if line.strip()
-                    ],
-                )
+            setattr(
+                self,
+                file,
+                [
+                    line.strip()
+                    for line in file_path.read_text().strip().split("\n")
+                    if line.strip()
+                ],
+            )
 
     def get_task_trigger(self) -> str:
         """Assembles the description of the task using the first line of the description and
@@ -152,8 +151,8 @@ You will now receive a transcript
     print()
     description = task_builder.get_task_trigger()
     task_output = task_builder.get_task_prompt(system_prompt, user_prompt, transcript=transcript)
-    print(description)
-    print(task_output)
+    pprint(description)
+    pprint(task_output)
 
 
 if __name__ == "__main__":

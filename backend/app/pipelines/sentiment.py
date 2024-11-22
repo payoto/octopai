@@ -12,7 +12,7 @@ import os
 
 import pandas as pd
 import anthropic
-import dotenvs
+import dotenv
 
 from ..models import Sentiment, SentimentClassificationOutput, Transcript
 from .transcript_processing import (
