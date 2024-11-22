@@ -1,4 +1,4 @@
-from models import TranscriptSegment, Transcript, Word
+from ..models import TranscriptSegment, Transcript, Word
 import json
 import sys
 

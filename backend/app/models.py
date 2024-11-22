@@ -2,8 +2,9 @@
 from typing import  List, Optional, Union, Dict, Any
 from typing_extensions import TypedDict
 from pydantic import BaseModel, Field
-from utils.prompt import ClientMessage
+from enum import Enum
 
+from .utils.prompt import ClientMessage
 
 class AnthropicRequest(BaseModel):
     messages:       List[ClientMessage]
@@ -35,6 +36,24 @@ class TranscriptSegment(TypedDict):
 Transcript = List[TranscriptSegment]
 
 
+class Sentiment(Enum):
+    DISCONNECTED = "disconnected"
+    CONFUSED = "confused"
+    POSITIVE = "positive"
+    NERVOUS = "nervous"
+    CONNECTED = "connected"
+    CONFLICTUAL = "conflictual"
+    NEUTRAL = "neutral"
+
+
+class SentimentClassificationOutput(TypedDict):
+    sentiment: Sentiment | None
+    model_sentiment: str
+    confidence: float
+    explanation: str
+    usage: Dict[str, Union[int, float]]
+    duration: float
+
 class Message:
     text: str
     speaker: str
@@ -43,7 +62,7 @@ class Message:
     end_timestamp: float
 
 class MessageAnnotations(BaseModel):
-    sentiment: Dict | Any | None
+    sentiment: SentimentClassificationOutput | None
     action: Dict | Any | None
     bot_message: Dict | Any | None
     timestamp: float

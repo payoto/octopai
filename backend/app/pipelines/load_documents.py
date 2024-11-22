@@ -1,5 +1,5 @@
-from services.document_processing_service import DocumentProcessor
-from core.database import get_chroma_db_service
+from ..services.document_processing_service import DocumentProcessor
+from ..core.database import get_chroma_db_service
 
 def load_documents():
     """Load documents."""

@@ -1,5 +1,6 @@
-from core.database import get_chroma_db_service
 import os
+
+from ..core.database import get_chroma_db_service
 
 class DocumentProcessor:
     def __init__(self):

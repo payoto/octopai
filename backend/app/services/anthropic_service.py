@@ -1,7 +1,8 @@
 from anthropic import Anthropic
-from core.config import ANTHROPIC_API_KEY
-from models import AnthropicRequest
-from core.context import log_response_messages
+
+from ..models import AnthropicRequest
+from ..core.config import ANTHROPIC_API_KEY
+from ..core.context import log_response_messages
 
 
 client = Anthropic(api_key=ANTHROPIC_API_KEY)

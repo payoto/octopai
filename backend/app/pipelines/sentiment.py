@@ -8,17 +8,18 @@ from enum import Enum
 import time
 from pathlib import Path
 import os
-from models import Sentiment, SentimentClassificationOutput, Transcript
-from pipelines.transcript_processing import (
-    format_segment_for_llm,
-    extract_last_minutes,
-    load_transcript,
-)
 
 
 import pandas as pd
 import anthropic
-import dotenv
+import dotenvs
+
+from ..models import Sentiment, SentimentClassificationOutput, Transcript
+from .transcript_processing import (
+    format_segment_for_llm,
+    extract_last_minutes,
+    load_transcript,
+)
 
 
 current_folder = Path(__file__).resolve().parent

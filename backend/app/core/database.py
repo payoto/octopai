@@ -1,7 +1,7 @@
 import chromadb
 from chromadb.config import Settings as ChromaSettings
 from chromadb.utils import embedding_functions
-from core.config import CHROMA_COLLECTION_NAME
+from .config import CHROMA_COLLECTION_NAME
 
 
 def get_chroma_db_service():
