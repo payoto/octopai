@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from fastapi.responses import StreamingResponse
-from models.request_models import AnthropicRequest
+from models import AnthropicRequest
 from services.anthropic_service import anthropic_stream_response
 from core.logging import logger
 

@@ -1,20 +1,17 @@
 """Classify the sentiment of the conversation."""
 
 from typing import TypedDict, List, Optional, Union, Dict
-from typing_extensions import NotRequired  # For Python <3.11
 import argparse
 import json
 import sys
 from enum import Enum
 import time
-import anthropic
+from pathlib import Path
 import os
 
 
-from enum import Enum
 import pandas as pd
-
-from pathlib import Path
+import anthropic
 import dotenv
 
 
@@ -250,7 +247,7 @@ def classify_transcript_1by1(
     try:
         # classify each as if it was the last one
         for i, _ in enumerate(transcript):
-            last_5mn = extract_last_minutes(transcript[:+1], 300)
+            last_5mn = extract_last_minutes(transcript[:+1], 60)
             classification, context = classify_sentiment(last_5mn)
             classifications.append([context["message"], classification])
     finally:

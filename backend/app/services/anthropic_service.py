@@ -1,6 +1,6 @@
 from anthropic import Anthropic
 from core.config import ANTHROPIC_API_KEY
-from models.request_models import AnthropicRequest
+from models import AnthropicRequest
 from core.context import log_response_messages
 
 

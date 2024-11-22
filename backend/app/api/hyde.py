@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
 from pipelines.hyde_pipeline import HydePipeline
-from models.request_models import AnthropicRequest
+from models import AnthropicRequest
 from core.logging import logger
 
 router = APIRouter()
