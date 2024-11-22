@@ -1,0 +1,25 @@
+class MeetingPart:
+    """Input from the frontend"""
+    url: str
+    host_name: str
+    transcript: Transcript
+
+
+Steps: let the host define
+
+your_project/
+├── .env
+├── main.py
+├── services/
+│   ├── __init__.py
+│   ├── bot_service.py
+│   └── backend_service.py
+├── utils/
+│   ├── __init__.py
+│   └── display.py
+├── pages/
+│   ├── 1_transcripts.py
+│   └── 2_chat.py
+└── actions/
+    ├── __init__.py
+    └── example_action.py
