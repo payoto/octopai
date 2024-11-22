@@ -8,6 +8,9 @@ import json
 # Reload environment variables
 load_dotenv(override=True)
 
+
+
+
 # Load environment variables
 API_KEY = os.getenv("API_KEY")
 MEETING_URL = input("Enter the meeting URL: ")
