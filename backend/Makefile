@@ -2,61 +2,47 @@ USERNAME = DOCKERHUB_USERNAME
 REPO = DOCKERHUB_REPO
 
 # Colors for output
-RED = \033[0;31m
 GREEN = \033[0;32m
 GRAY = \033[0;30m
 NC = \033[0m
+RED = \033[0;31m
 
 ## Setup and Configuration Commands
+# Add environment name variable at the top
+CONDA_ENV_NAME = octopai_env
 
-# Check if Python is installed
-check_python:
-	@echo "$(GRAY)Checking if Python is installed$(NC)"
-	@command -v python3 >/dev/null 2>&1 || (echo "$(RED)❗️ Python is not installed$(NC)" && exit 1)
-	@echo "$(GREEN)✅ Python is installed$(NC)"
-
-# Setup .env file
-setup_env: .env
-
-.env:
-	@echo "$(GRAY)Setting up .env$(NC)"
-	@if [ -f ".env" ]; then \
-        echo "$(RED)❗️ .env already exists$(NC)"; \
-	else \
-        cp .env.example .env && echo "$(GREEN)✅ .env created$(NC)"; \
-	fi
-
-# Create virtual environment
-create_venv: update_upgrade_ubuntu .venv
-
+# Check Python version
 update_upgrade_ubuntu:
 	@echo "$(GRAY)update && upgrade Ubuntu$(NC)"
 	sudo apt update && sudo apt upgrade
-	@echo "$(GRAY)Install python3-pip package$(NC)"
-	sudo apt install python3-pip
-	@echo "$(GRAY)Install .venv package$(NC)"
-	sudo apt install -y python3-venv
+	@echo "$(GREEN)✅ System updated$(NC)"
 
-.venv:
-	@echo "$(GRAY)Creating virtual environment .venv$(NC)"
-	python3 -m venv .venv 
-	@echo "$(GREEN)✅ .venv created$(NC)"
+# Create and configure conda environment
+create_conda_env:
+	@echo "$(GRAY)Creating conda environment $(CONDA_ENV_NAME)$(NC)"
+	@if conda env list | grep -q "$(CONDA_ENV_NAME)"; then \
+        echo "$(RED)❗️ Conda environment $(CONDA_ENV_NAME) already exists$(NC)"; \
+	else \
+        conda create -n $(CONDA_ENV_NAME) python=3.11 -y && \
+        echo "$(GREEN)✅ Conda environment created$(NC)"; \
+	fi
 
 # Install dependencies
-install_deps: .venv
+install_deps: create_conda_env
 	@echo "$(GRAY)Installing required packages$(NC)"
-	. .venv/bin/activate && pip install -r requirements.txt 
+	conda run -n $(CONDA_ENV_NAME) conda install -y -q -c conda-forge --file requirements.txt
 	@echo "$(GREEN)✅ Packages installed from requirements.txt$(NC)"
 
 # Complete project setup
-setup: check_python setup_env create_venv install_deps
+setup: create_conda_env install_deps
 	@echo "$(GRAY)\n--- --- --- --- ---\n$(NC)"
 	@echo "$(GREEN)✅ Setup complete\n$(NC)"
 
+# Development environment activation and run fastapi
 dev:
-	@echo "$(GRAY)Starting development server$(NC)"
-	. .venv/bin/activate && fastapi dev ./app/main.py
-	@echo "$(GREEN)✅ Development server started$(NC)"
+	@echo "$(GRAY)Running FastAPI server$(NC)"; \
+	fastapi dev ./app/main.py; \
+
 
 ## Docker Commands
 
@@ -87,4 +73,4 @@ clean:
 
 
 # Main targets
-.PHONY: all check_python setup_env create_venv install_dep update_upgrade_ubuntu build_docker run_docker clean
+.PHONY: conda_env setup build_docker run_docker push_docker clean

@@ -2,3 +2,9 @@ fastapi[standard]
 uvicorn
 python-dotenv
 anthropic
+chromadb
+nodejs
+sentence-transformers
+nltk 
+scikit-learn 
+numpy

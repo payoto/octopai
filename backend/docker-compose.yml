@@ -7,3 +7,11 @@ services:
       - "8000:8000"
     environment:
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+  # chromadb:
+  #   image: chromadb/chroma:latest
+  #   ports:
+  #     - "8000:8000"
+  #   environment:
+  #     - POSTGRES_USER=${CHROMA_USER}
+  #     - POSTGRES_PASSWORD=${CHROMA_PASSWORD}
+  #     - POSTGRES_DB=${CHROMA_DB_NAME}

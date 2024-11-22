@@ -13,7 +13,7 @@ const Chat = () => {
     const { base64, fileType } = imageData || {};
 
     const chatHook = useChat({
-        api: '/api/chat',
+        api: '/api/hyde',
         streamProtocol: 'text',
         body: {
             model: modelSettings.model,
