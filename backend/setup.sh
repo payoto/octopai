@@ -16,14 +16,14 @@ else
 fi
 
 # Check if conda is installed
-echo -e "${GRAY}Checking if conda is installed${NC}"
-if ! command -v conda &> /dev/null
-then
-    echo -e "${RED}❗️ Conda is not installed${NC}"
-    exit 1
-else
-    echo -e "${GREEN}✅ Conda${NC}"
-fi
+# echo -e "${GRAY}Checking if conda is installed${NC}"
+# if ! command -v conda &> /dev/null
+# then
+#     echo -e "${RED}❗️ Conda is not installed${NC}"
+#     exit 1
+# else
+#     echo -e "${GREEN}✅ Conda${NC}"
+# fi
 
 # Set up the environment
 echo -e "${GRAY}Setting up .env${NC}"
@@ -39,19 +39,22 @@ echo -e "${GRAY}Creating conda environment${NC}"
 
 ENVNAME="octopai_env"
 
-if conda info --envs | grep -q $ENVNAME; then
-    echo -e "${RED}❗️ Conda environment '$ENVNAME' already exists${NC}"
+curl -LsSf https://astral.sh/uv/install.sh | sh
+if ! command -v uv &> /dev/null
+then
+    echo -e "${RED}❗️ uv is not installed${NC} 0 try restarting the terminal"
+    exit 1
 else
-    conda create -n $ENVNAME python=3.11 -y && echo -e "${GREEN}✅ Conda environment${NC}"
+    echo -e "${GREEN}✅ uv${NC}"
 fi
+
 
 # Install the required packages
 echo -e "${GRAY}Installing the required packages${NC}"
-
-eval "$(conda shell.bash hook)"
-conda activate $ENVNAME && echo -e "${GREEN}✅ Conda environment activated${NC}"
-conda install pip -y && echo -e "${GREEN}✅ Pip installed${NC}"
-pip install --no-cache-dir -r requirements.txt && echo -e "${GREEN}✅ requirements.txt${NC}"
+uv venv
+source .venv/bin/activate
+python -m ensurepip
+uv pip install --no-cache-dir -r requirements.txt && echo -e "${GREEN}✅ requirements.txt${NC}"
 
 echo -e "${GRAY}\n--- --- --- --- ---\n${NC}"
 echo -e "${GREEN}✅ Setup complete\n${NC}"

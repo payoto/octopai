@@ -5,3 +5,6 @@
 *.log
 frontend/.env
 backend/logs/
+.env
+logs/
+__pycache__/
