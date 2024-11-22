@@ -30,6 +30,7 @@ def create_message(request: AnthropicRequest):
 def anthropic_stream_response(request: AnthropicRequest):
 
     messages = create_message(request)
+
     stream = client.messages.create(
         model=request.model,
         system=request.system_message,
@@ -40,7 +41,7 @@ def anthropic_stream_response(request: AnthropicRequest):
         top_k=request.top_k,
         stream=True,
     )
-    output += ""
+    output = ""
     for chunk in stream:
         if chunk.type == "content_block_delta":
             output += chunk.delta.text

@@ -39,4 +39,10 @@ def log_response_messages(messages, type="chat"):
     print(f"Logging request to disk: {context.request_id}")
     request_log_path = Path(f"logs/requests/{context.request_id}/{counter}_{type}.json")
     request_log_path.parent.mkdir(parents=True, exist_ok=True)
-    request_log_path.write_text(json.dumps(messages, indent=2))
+    request_log_path.write_text(json.dumps(messages, indent=2, cls=BaseModelEncoder))
+
+class BaseModelEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if hasattr(obj, "model_dump_json"):
+            return obj.model_dump_json()
+        return super().default(obj)
