@@ -31,7 +31,7 @@ def yield_one_message_annotation_of_each_type(transcript: models.Transcript) -> 
         ),
         action=None,
         bot_message=None,
-        timestamp=delta * 0.2
+        timestamp=start_time + delta * 0.2
     ).model_dump_json()
 
 @router.post("/api/meeting")
