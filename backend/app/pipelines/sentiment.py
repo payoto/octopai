@@ -8,6 +8,12 @@ from enum import Enum
 import time
 from pathlib import Path
 import os
+from models import Sentiment, SentimentClassificationOutput, Transcript
+from pipelines.transcript_processing import (
+    format_segment_for_llm,
+    extract_last_minutes,
+    load_transcript,
+)
 
 
 import pandas as pd
@@ -22,54 +28,6 @@ dotenv.load_dotenv(backend_root / ".env")
 client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
 
-class Word(TypedDict):
-    text: str
-    start_timestamp: float
-    end_timestamp: float
-    language: Optional[str]
-    confidence: Optional[float]
-
-
-class TranscriptSegment(TypedDict):
-    words: List[Word]
-    speaker: str
-    speaker_id: int
-    language: str
-
-
-Transcript = List[TranscriptSegment]
-
-
-def format_word_for_llm(word: Word):
-    # utterance start: {start_timestamp:.2f}s
-    format = """
-{text}
-    """
-    # utterance end: {end_timestamp:.2f}s
-    return format.format(**word)
-
-
-def format_segment_for_llm(segment: TranscriptSegment):
-    formatted_segment = f"Speaker: {segment['speaker']}\n"
-    for word in segment["words"]:
-        formatted_segment += format_word_for_llm(word)
-    return formatted_segment
-
-
-def extract_last_minutes(
-    transcript: Transcript, seconds: float
-) -> List[TranscriptSegment]:
-    # Truncate the transcript to the last 5mn
-    last_timestamp = transcript[-1]["words"][-1]["end_timestamp"]
-    last_timestamp -= seconds
-    last_segments = []
-    for i, segment in enumerate(transcript):
-        if segment["words"][-1]["start_timestamp"] >= last_timestamp:
-            last_segments.extend(transcript[i:])
-            break
-    return last_segments
-
-
 SENTIMENT_DESCRIPTIONS = {
     "disengaged": "The user seems distracted and uninterested in the conversation, their comments might be off-topic.",
     "confused": "The user appears confused and unsure about the topic.",
@@ -79,25 +37,6 @@ SENTIMENT_DESCRIPTIONS = {
     "conflictual": "The user is expressing disagreement or conflict.",
     "neutral": "The person is not displaying any particular emotion.",
 }
-
-
-class Sentiment(Enum):
-    DISCONNECTED = "disconnected"
-    CONFUSED = "confused"
-    POSITIVE = "positive"
-    NERVOUS = "nervous"
-    CONNECTED = "connected"
-    CONFLICTUAL = "conflictual"
-    NEUTRAL = "neutral"
-
-
-class SentimentClassificationOutput(TypedDict):
-    sentiment: Sentiment | None
-    model_sentiment: str
-    confidence: float
-    explanation: str
-    usage: Dict[str, Union[int, float]]
-    duration: float
 
 
 def load_sentiment_examples(
@@ -268,19 +207,6 @@ class EnumJSONEncoder(json.JSONEncoder):
         return super().default(obj)
 
 
-def load_transcript(file_path: str) -> Transcript:
-    """Load a transcript from a JSON file."""
-    try:
-        with open(file_path, "r") as f:
-            return json.load(f)
-    except FileNotFoundError:
-        print(f"Error: Could not find file {file_path}", file=sys.stderr)
-        sys.exit(1)
-    except json.JSONDecodeError:
-        print(f"Error: Invalid JSON format in {file_path}", file=sys.stderr)
-        sys.exit(1)
-
-
 def main():
     parser = argparse.ArgumentParser(
         description="Process conversation transcripts for sentiment analysis",
@@ -304,7 +230,6 @@ def main():
         default="text",
         help="Output format for the analysis results",
     )
-
 
     args = parser.parse_args()
     if args.output is None:
