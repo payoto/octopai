@@ -5,7 +5,8 @@ import models
 from services.anthropic_service import anthropic_stream_response
 from core.logging import logger
 from pipelines.sentiment import SentimentClassificationOutput, Sentiment
-
+from pipelines.next_action import ActionPick, Action
+import time
 router = APIRouter()
 
 def log_request(request: models.MeetingPart):
@@ -31,11 +32,26 @@ def yield_one_message_annotation_of_each_type(transcript: models.Transcript) -> 
         ),
         action=None,
         bot_message=None,
-        timestamp=start_time + delta * 0.2
+        timestamp=start + delta * 0.2
     ).model_dump_json()
 
+    yield models.MessageAnnotations(
+        sentiment=None,
+        action=ActionPick(
+            action=Action.LET_THE_CONVERSATION_CONTINUE,
+            model_action="let_the_conversation_continue",
+            confidence=1.0,
+            explanation="I can't be bothered to do anything",
+            usage={"input": 1000, "output": 20},
+            duration=5,
+        ),
+        bot_message=None,
+        timestamp=start + delta * 0.3,
+    ).model_dump_json()
+
+
 @router.post("/api/meeting")
-async def handle_meeting(request: models.MeetingPart) -> models.MessageAnnotations:
+async def handle_meeting(request: models.MeetingPart):
     log_request(request)
     response = StreamingResponse(yield_one_message_annotation_of_each_type(request.transcript), media_type="plain/text")
     return response

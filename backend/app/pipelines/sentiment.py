@@ -119,7 +119,7 @@ def format_sentiment_examples_into_prompt(examples: Dict):
     example_str = ""
     for sentiment, data in examples.items():
         example_separator = "- \n"
-        example_str += f"""{sentiment.capitalize()}: {data['explanation']}
+        example_str += f"""{str(sentiment).upper()}: {data['explanation']}
 Examples:
 - {example_separator.join(data['examples'])}
 """
