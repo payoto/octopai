@@ -1,8 +1,9 @@
-from typing import TypedDict, Optional, List
+from typing import TypedDict, Dict, List, Type, Optional, TYPE_CHECKING
 import argparse
 import dataclasses
 from pprint import pprint
 from pathlib import Path
+from enum import Enum
 
 from ..pipelines.transcript_processing import format_transcript_for_llm, load_transcript, merge_into_user_messages
 
@@ -32,9 +33,9 @@ class TaskBuilder:
     version: Optional[str] = None
     description: str = ""
     answer_format: str = ""
-    good_responses: List[str] = dataclasses.field(default_factory=list)
-    bad_responses: List[str] = dataclasses.field(default_factory=list)
-    triggers: List[str] = dataclasses.field(default_factory=list)
+    good_responses: list[str] = dataclasses.field(default_factory=list)
+    bad_responses: list[str] = dataclasses.field(default_factory=list)
+    triggers: list[str] = dataclasses.field(default_factory=list)
 
     def __post_init__(self):
         # Determine the correct folder based on version
@@ -68,10 +69,14 @@ class TaskBuilder:
 
     def get_task_trigger(self) -> str:
         """Assembles the description of the task using the first line of the description and
-        up to 2 trigger examples."""
+        up to 2 trigger examples.
+        """
+        # Get first line of description
         first_line = self.description.split("\n")[0].strip()
+        # Select up to 2 triggers
         selected_triggers = self.triggers[:2]
 
+        # Combine into final trigger
         trigger_text = f"{self.name}: {first_line}\n\nExample messages that indicate this action should be used:\n"
         trigger_text += "\n".join(f"- {trigger}" for trigger in selected_triggers)
 
@@ -106,19 +111,56 @@ class TaskBuilder:
 
 def discover_tasks() -> List[TaskBuilder]:
     """Discover all tasks in the task_data directory."""
-    tasks_dir = Path(__file__).parent / "task_data"
+    tasks_dir = current_folder
     tasks = []
 
     # Get all subdirectories that contain the required task files
     for task_dir in tasks_dir.iterdir():
         if task_dir.is_dir() and not task_dir.name.startswith('.'):
-            required_files = REQUIRED_FILES
+
 
             # Check if all required files exist
-            if all((task_dir / file).exists() for file in required_files):
+            if all((task_dir / file).exists() for file in REQUIRED_FILES):
                 tasks.append(TaskBuilder(task_dir.name))
 
     return tasks
+
+def create_action_enum() -> Type[Enum]:
+    """Dynamically create an Action enum from discovered tasks."""
+    tasks = discover_tasks()
+
+    # Create enum members dict
+    # Convert task names to uppercase and replace spaces/hyphens with underscores
+    enum_members = {
+        task.name.upper().replace('-', '_').replace(' ', '_'): task.name.lower()
+        for task in tasks
+    }
+
+    # Always add a default "let the conversation continue" action
+    enum_members['LET_THE_CONVERSATION_CONTINUE'] = 'let_the_conversation_continue'
+
+    # Create the enum dynamically
+    return Enum('Action', enum_members)
+
+# Create the Action enum when module is imported
+if TYPE_CHECKING:
+    # Existing Action enum
+    class Action(Enum):
+        REFOCUS = "refocus"
+        ELABORATE = "elaborate"
+        SUMMARIZE = "summarize"
+        INVITE_SOMEONE_ELSE = "invite_someone_else"
+        LET_THE_CONVERSATION_CONTINUE = "let_the_conversation_continue"
+else:
+    Action = create_action_enum()
+
+def get_task_by_action(action: "Action") -> TaskBuilder | None:
+    """Get the TaskBuilder instance corresponding to an Action enum value."""
+    tasks = discover_tasks()
+    for task in tasks:
+        if task.name.lower() == action.value:
+            return task
+    return None
 
 def get_parser() -> argparse.ArgumentParser:
     """Argument parser should collect a task which have the same name as the
@@ -146,7 +188,6 @@ def get_parser() -> argparse.ArgumentParser:
     )
 
     return parser
-
 
 
 
@@ -186,4 +227,12 @@ You will now receive a transcript
 if __name__ == "__main__":
     parser = get_parser()
     args = parser.parse_args()
+    # Print out discovered tasks and generated enum for debugging
+    print("\nDiscovered Tasks:")
+    for task in discover_tasks():
+        print(f"- {task.name}")
+
+    print("\nGenerated Action Enum Members:")
+    for action in Action:
+        print(f"- {action.name}: {action.value}")
     main(args)

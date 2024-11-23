@@ -6,21 +6,10 @@ This uses anthropic tool use to choose what the most appropriate actions is
 
 """
 from typing import List, Dict, Union, TypedDict
-import pandas as pd
 import time
-from enum import Enum
 import anthropic
 import os
-from pathlib import Path
-from ..task_data.task_loader import discover_tasks
-
-# Existing Action enum
-class Action(Enum):
-    REFOCUS = "refocus"
-    ELABORATE = "elaborate"
-    SUMMARIZE = "summarize"
-    INVITE_SOMEONE_ELSE = "invite_someone_else"
-    LET_THE_CONVERSATION_CONTINUE = "let_the_conversation_continue"
+from ..task_data.task_loader import Action, discover_tasks, get_task_by_action
 
 class ActionPick(TypedDict):
     action: Action | None
@@ -29,7 +18,6 @@ class ActionPick(TypedDict):
     explanation: str
     usage: Dict[str, Union[int, float]]
     duration: float
-
 
 class ActionPicker:
     def __init__(self):
@@ -52,8 +40,6 @@ class ActionPicker:
 
         self.tool_name = "action_picker"
         self.model = "claude-3-5-haiku-20241022"
-
-        # Build tool description from discovered tasks
         self.tools = [self._build_tool_schema()]
 
     def _build_tool_schema(self) -> Dict:
@@ -115,9 +101,13 @@ class ActionPicker:
         tool_input = response.content[0].input
         raw_action = str(tool_input["action"]).lower()
 
+        # Try to find the matching Action enum member
         try:
-            action = Action[raw_action.upper()]
-        except KeyError:
+            action = next(
+                (act for act in Action if act.value == raw_action),
+                None
+            )
+        except (KeyError, ValueError):
             action = None
 
         return ActionPick(
