@@ -25,6 +25,7 @@ REQUIRED_FILES = [
     "triggers.txt"
 ]
 
+
 @dataclasses.dataclass
 class TaskBuilder:
     name: str
@@ -103,6 +104,22 @@ class TaskBuilder:
             "tools": {}
         }
 
+def discover_tasks() -> List[TaskBuilder]:
+    """Discover all tasks in the task_data directory."""
+    tasks_dir = Path(__file__).parent / "task_data"
+    tasks = []
+
+    # Get all subdirectories that contain the required task files
+    for task_dir in tasks_dir.iterdir():
+        if task_dir.is_dir() and not task_dir.name.startswith('.'):
+            required_files = REQUIRED_FILES
+
+            # Check if all required files exist
+            if all((task_dir / file).exists() for file in required_files):
+                tasks.append(TaskBuilder(task_dir.name))
+
+    return tasks
+
 def get_parser() -> argparse.ArgumentParser:
     """Argument parser should collect a task which have the same name as the
     subfolders in this directory.
@@ -129,6 +146,8 @@ def get_parser() -> argparse.ArgumentParser:
     )
 
     return parser
+
+
 
 
 def main(args: argparse.Namespace):
