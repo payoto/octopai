@@ -11,7 +11,7 @@ class DocumentProcessor:
         documents_path = "./database/documents"
         documents = []
         for filename in os.listdir(documents_path):
-            if filename.endswith(".txt"):
+            if filename.endswith(".txt") | filename.endswith(".md"):
                 with open(os.path.join(documents_path, filename), "r") as file:
                     documents.append({"text": file.read()})
         return documents

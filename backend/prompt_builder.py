@@ -112,7 +112,7 @@ def get_available_transcripts() -> list[str]:
 
 def test_with_claude(task_version: str, transcript: str):
     """Test the task with Claude using the backend API."""
-    url = "http://localhost:8001/api/test_task"  # You'll need to create this endpoint
+    url = "http://localhost:8000/api/test_task"  # You'll need to create this endpoint
     data = {
         "task_version": task_version,
         "transcript": transcript
