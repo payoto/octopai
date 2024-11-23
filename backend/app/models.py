@@ -54,6 +54,10 @@ class SentimentClassificationOutput(TypedDict):
     usage: Dict[str, Union[int, float]]
     duration: float
 
+class BotMessage(TypedDict):
+    role: str
+    content: str
+
 class Message:
     text: str
     speaker: str
@@ -64,7 +68,7 @@ class Message:
 class MessageAnnotations(BaseModel):
     sentiment: SentimentClassificationOutput | None
     action: Dict | Any | None
-    bot_message: Dict | Any | None
+    bot_message: BotMessage | Any | None
     timestamp: float
 
 

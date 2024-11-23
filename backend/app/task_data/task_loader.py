@@ -4,12 +4,14 @@ import dataclasses
 from pprint import pprint
 from pathlib import Path
 from enum import Enum
-
+from ..models import BotMessage
 from ..pipelines.transcript_processing import (
     format_transcript_for_llm,
     load_transcript,
     merge_into_user_messages,
 )
+
+from ..pipelines.hyde_pipeline import client, log_response_messages, HydePipeline
 
 current_folder = Path(__file__).resolve().parent
 backend_root = current_folder.parents[1]
@@ -110,6 +112,76 @@ class TaskBuilder:
 
         return {"system": formatted_system, "user": formatted_user, "tools": {}}
 
+    def run_task(self, transcript: str) -> "BotMessage":
+        """Run the task on the provided transcript."""
+        print(f"Running task {self.name}")
+        system_prompt = """
+You will receive a transcript from a conversation, based on the conversation complete the following task:
+{description}
+
+Some bad examples of what your answer might look like are:
+{bad_responses}
+
+Some good examples of what your answer might look like are:
+{good_responses}
+
+{answer_format}
+You will now receive a transcript
+"""
+
+        user_prompt = """This is a transcript of the conversation:
+<transcript>
+{transcript}
+</transcript>
+{description}
+"""
+        task_output = self.get_task_prompt(
+            system_prompt, user_prompt, transcript=transcript
+        )
+        claude_response = self.call_claude(task_output["system"], task_output["user"], task_output["tools"])
+        return {"role": self.name, "content": claude_response}
+
+    def call_claude(self, system, user, tools):
+        messages = [{
+            "role": "user",
+            "content": user
+        }]
+        stream = client.messages.create(
+            model="claude-3-5-haiku-20241022",
+            max_tokens=1024,
+            messages=messages,
+            system=system,
+            stream=True,
+        )
+        output = ""
+        for chunk in stream:
+            if chunk.type == "content_block_delta":
+                output += chunk.delta.text
+        messages.insert(0, {
+            "role": "system",
+            "content": system
+        })
+        messages.append({
+            "role": "assistant",
+            "content": output
+        })
+        log_response_messages(messages)
+        return output
+
+
+class RagTaskBuilder(TaskBuilder):
+    def run_task(self, transcript: str) -> BotMessage:
+        print("Running RAG task")
+        question = super().run_task(transcript)
+        pipeline = HydePipeline()
+        hyde_output = ""
+        for o in pipeline.process_query(question["content"]):
+            hyde_output += o
+        return {"role": self.name, "content": hyde_output}
+
+CUSTOM_TASK_CLASS_REGISTRATIONS = {
+    "generate_query": RagTaskBuilder,
+}
 
 def discover_tasks() -> List[TaskBuilder]:
     """Discover all tasks in the task_data directory."""
@@ -121,7 +193,9 @@ def discover_tasks() -> List[TaskBuilder]:
         if task_dir.is_dir() and not task_dir.name.startswith("."):
             # Check if all required files exist
             if all((task_dir / file).exists() for file in REQUIRED_FILES):
-                tasks.append(TaskBuilder(task_dir.name))
+                task_class = CUSTOM_TASK_CLASS_REGISTRATIONS.get(task_dir.name, TaskBuilder)
+                print(f"Discovered task: {task_dir.name}, will use task class {task_class}")
+                tasks.append(task_class(task_dir.name))
 
     return tasks
 
@@ -182,7 +256,7 @@ def get_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--transcript",
-        default=str(backend_root / "logs/transcripts/transcript_3.json"),
+        default=str(backend_root / "logs/transcripts/transcript_better.json"),
         type=str,
         help="Provide a transcript",
     )
@@ -192,39 +266,19 @@ def get_parser() -> argparse.ArgumentParser:
 
 def main(args: argparse.Namespace):
     # Initialize TaskBuilder with the specified task folder
-    task_builder = TaskBuilder(args.task)
+    task_builder = get_task_by_action(Action[args.task.upper()])
     transcript = format_transcript_for_llm(
         merge_into_user_messages(load_transcript(args.transcript))
     )
     # Example system and user prompts - these could be loaded from files as well
-    system_prompt = """
-You will receive a transcript from a conversation, based on the conversation complete the following task:
-{description}
-
-Some bad examples of what your answer might look like are:
-{bad_responses}
-
-Some good examples of what your answer might look like are:
-{good_responses}
-
-{answer_format}
-You will now receive a transcript
-"""
-
-    user_prompt = """This is a transcript of the conversation:
-<transcript>
-{transcript}
-</transcript>
-{description}
-"""
     # Generate task prompt
     print()
     description = task_builder.get_task_trigger()
-    task_output = task_builder.get_task_prompt(
-        system_prompt, user_prompt, transcript=transcript
-    )
+    print("Task Trigger:")
     pprint(description)
-    pprint(task_output)
+    print("Task Result:")
+    task_output = task_builder.run_task(transcript)
+    print(task_output["content"])
 
 
 if __name__ == "__main__":

@@ -1,3 +1,4 @@
+from typing import Generator
 from ..core.database import get_chroma_db_service
 from ..core.context import log_response_messages
 from ..services.anthropic_service import client, AnthropicRequest
@@ -30,7 +31,7 @@ class HydePipeline:
         })
         log_response_messages(messages)
 
-    def process_query(self, query: AnthropicRequest) -> str:
+    def process_query(self, query: AnthropicRequest | str) -> Generator[str, None, None]:
         """Apply HyDE to the query
 
         - takes the last message
@@ -39,7 +40,10 @@ class HydePipeline:
         - returns the documents
         - prompts the model to answer the question using the documents
         """
-        question = query.messages[-1].content
+        if isinstance(query, AnthropicRequest):
+            question = query.messages[-1].content
+        else:
+            question = query
         yield "<hyde>"
         prompt = f"""Provide an hypothetical answer to the given question.
                      Question: {question}"""

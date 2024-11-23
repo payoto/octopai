@@ -28,7 +28,7 @@ def create_message(request: AnthropicRequest):
         }]
     return request.messages
 
-def anthropic_stream_response(request: AnthropicRequest):
+def anthropic_stream_response(request: AnthropicRequest, stream=True):
 
     messages = create_message(request)
 
@@ -46,7 +46,8 @@ def anthropic_stream_response(request: AnthropicRequest):
     for chunk in stream:
         if chunk.type == "content_block_delta":
             output += chunk.delta.text
-            yield chunk.delta.text
+            if stream:
+                yield chunk.delta.text
     if True:
         messages.insert(0, {
             "role": "system",
@@ -57,3 +58,5 @@ def anthropic_stream_response(request: AnthropicRequest):
             "content": output
         })
         log_response_messages(messages)
+    if not stream:
+        return output
