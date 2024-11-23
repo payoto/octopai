@@ -22,7 +22,7 @@ def create_bot(api_key, meeting_url):
         "chat": {
             "on_bot_join": {
                 "send_to": "everyone",
-                "message": "Hello! I'm 🐙 Octopai Bot, I am here to help you."
+                "message": """Hi there! I'm OctopAI 🐙 your friendly (and slightly genius) Money Movers assistant! Think of me as your group's secret weapon I'll help guide your conversations, tackle questions, and keep things flowing smoother than a dolphin doing the backstroke 🐬. No financial advice here (that's a no-go 🚫), but I'm great at helping you explore big ideas, find great resources and learn together! Ready to dive in?"""
             }
         }
     }

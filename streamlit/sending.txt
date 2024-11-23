@@ -23,3 +23,41 @@ your_project/
 └── actions/
     ├── __init__.py
     └── example_action.py
+
+
+	backend:
+	
+	[
+  {
+    "sentiment": {
+      "sentiment": "confused",
+      "model_sentiment": "confused",
+      "confidence": 0.4,
+      "explanation": "Because i picked it and I was confused.",
+      "usage": {
+        "input": 1000,
+        "output": 100
+      },
+      "duration": 4.2
+    },
+    "action": null,
+    "bot_message": null,
+    "timestamp": 48.381454658508304
+  },
+  {
+    "sentiment": null,
+    "action": {
+      "action": "let_the_conversation_continue",
+      "model_action": "let_the_conversation_continue",
+      "confidence": 1.0,
+      "explanation": "I can't be bothered to do anything",
+      "usage": {
+        "input": 1000,
+        "output": 20
+      },
+      "duration": 5
+    },
+    "bot_message": null,
+    "timestamp": 71.77701013088226
+  }
+]
