@@ -12,6 +12,7 @@ from services import (
     send_message,
     send_to_backend
 )
+from services.bot_service import set_octopus
 from utils import display_combined_chat
 from actions import check_messages, handle_stop_command
 
@@ -54,6 +55,9 @@ def main():
         dummy_backend = st.toggle("🔇 Dummy Backend", value=False)
         # Auto-refresh toggle
         auto_refresh = st.toggle('🔄 Auto-refresh', value=True)
+        if st.button("Add bot image"):
+
+            set_octopus(st.session_state.bot_id)
 
         # Refresh button in sidebar
         if st.button("🔄"):

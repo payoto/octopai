@@ -3,6 +3,34 @@ import streamlit as st
 from pathlib import Path
 import json
 
+import base64
+from pathlib import Path
+
+
+
+def get_image_as_base64(image_path):
+    with open(image_path, "rb") as image_file:
+        return base64.b64encode(image_file.read()).decode()
+
+def set_octopus(bot_id):
+    # Get base64 encoded image
+    file = Path(__file__).resolve().parents[1] / "octopus_21.jpg"
+    octopus_base64 = get_image_as_base64(file)
+    url = f"https://us-west-2.recall.ai/api/v1/bot/{bot_id}/output_video/"
+
+    payload = { "kind": "jpeg",
+            "b64_data": octopus_base64}
+    headers = {
+        "accept": "application/json",
+        "content-type": "application/json",
+        "Authorization": st.session_state.api_key.strip()
+    }
+
+    response = requests.post(url, json=payload, headers=headers)
+    if response.status_code != 200:
+        st.error(f"Failed to set octopus image: {response.text}")
+
+
 def create_bot(api_key, meeting_url):
     if Path(meeting_url).exists():
         return meeting_url
@@ -33,7 +61,9 @@ def create_bot(api_key, meeting_url):
             st.error("Authentication failed. Please check your API key.")
             return None
         response.raise_for_status()
-        return response.json()['id']
+        bot_id = response.json().get("bot_id")
+        set_octopus(bot_id)
+        return bot_id
     except requests.exceptions.RequestException as e:
         st.error(f"Error creating bot: {str(e)}")
         return None
