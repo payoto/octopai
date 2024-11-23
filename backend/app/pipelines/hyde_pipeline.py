@@ -73,7 +73,9 @@ class HydePipeline:
             {context}
             </documents>
             Please remain faithful to the underlying context, and only deviate from it if you are 100% sure that you know the answer already.
-            Answer the question now, and avoid providing preamble such as 'Here is the answer', etc
+            Answer the question now, and avoid providing preamble such as 'Here is the answer' and 'Based on the context', etc. 
+            Answer with a friendly and optimistic tone and avoid complicated language.
+            Only offer information to answer the question, and never give financial advice
             """
         yield f"<final_query>\n{final_query}\n</final_query>\n"
         yield "</hyde>"
