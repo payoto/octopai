@@ -48,6 +48,10 @@ def anthropic_stream_response(request: AnthropicRequest):
             output += chunk.delta.text
             yield chunk.delta.text
     if True:
+        messages.insert(0, {
+            "role": "system",
+            "content": request.system_message
+        })
         messages.append({
             "role": "assistant",
             "content": output

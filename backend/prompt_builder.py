@@ -128,8 +128,9 @@ def process_transcript(transcript_path: str) -> Optional[str]:
         st.error(f"Error processing transcript: {str(e)}")
         return None
 
+
+
 def main():
-    st.set_page_config(page_title="Task Builder Manager", layout="wide")
     st.title("Task Builder Manager")
 
     # Task Selection or Creation
@@ -153,70 +154,86 @@ def main():
         col1, col2 = st.columns([6, 4])  # Adjust ratio as needed
 
         with col1:
-            # Version Selection
+            # Version Selection at the top
             versions = get_task_versions(selected_task_option)
             if not versions:
                 current_task = selected_task_option
+                st.info("No versions yet - editing original task")
             else:
-                current_task = st.selectbox("Select Version", versions, index=0)
-
-            # Task Editor Form
-            with st.form(key="task_editor"):
-                task_files = get_task_files(current_task)
-
-                st.subheader("Description")
-                description = st.text_area(
-                    "Description",
-                    read_file_content(task_files["description"]),
-                    height=100
+                current_task = st.selectbox(
+                    "Select Version to Edit",
+                    [selected_task_option] + versions,
+                    index=0,
+                    help="Select original task or a specific version to edit"
                 )
 
-                st.subheader("Answer Format")
-                answer_format = st.text_area(
-                    "Answer Format",
-                    read_file_content(task_files["answer_format"]),
-                    height=100
-                )
+            # Task Editor (no form)
+            task_files = get_task_files(current_task)
 
-                st.subheader("Good Responses")
-                good_responses = st.text_area(
-                    "Good Responses",
-                    read_file_content(task_files["good_responses"]),
-                    height=100
-                )
+            st.subheader("Description")
+            description = st.text_area(
+                "Description",
+                read_file_content(task_files["description"]),
+                height=100
+            )
 
-                st.subheader("Bad Responses")
-                bad_responses = st.text_area(
-                    "Bad Responses",
-                    read_file_content(task_files["bad_responses"]),
-                    height=100
-                )
+            st.subheader("Answer Format")
+            answer_format = st.text_area(
+                "Answer Format",
+                read_file_content(task_files["answer_format"]),
+                height=100
+            )
 
-                st.subheader("Triggers")
-                triggers = st.text_area(
-                    "Triggers",
-                    read_file_content(task_files["triggers"]),
-                    height=100
-                )
+            st.subheader("Good Responses")
+            good_responses = st.text_area(
+                "Good Responses",
+                read_file_content(task_files["good_responses"]),
+                height=100
+            )
 
-                # Form submission buttons
-                submit = st.form_submit_button("Save Version")
+            st.subheader("Bad Responses")
+            bad_responses = st.text_area(
+                "Bad Responses",
+                read_file_content(task_files["bad_responses"]),
+                height=100
+            )
 
-                if submit:
-                    file_contents = {
-                        "description": description,
-                        "answer_format": answer_format,
-                        "good_responses": good_responses,
-                        "bad_responses": bad_responses,
-                        "triggers": triggers
-                    }
-                    new_version = save_task_version(selected_task_option, file_contents)
-                    st.success(f"Saved as version: {new_version}")
-                    st.rerun()
+            st.subheader("Triggers")
+            triggers = st.text_area(
+                "Triggers",
+                read_file_content(task_files["triggers"]),
+                height=100
+            )
+
+            # Save button at the bottom
+            if st.button("Save New Version", type="primary"):
+                file_contents = {
+                    "description": description,
+                    "answer_format": answer_format,
+                    "good_responses": good_responses,
+                    "bad_responses": bad_responses,
+                    "triggers": triggers
+                }
+                new_version = save_task_version(selected_task_option, file_contents)
+                st.success(f"✅ Successfully saved version: {new_version}")
+
+                # Add a small delay to show the success message before rerunning
+                import time
+                time.sleep(1)
+                st.rerun()
 
         with col2:
             st.subheader("Test with Claude")
-            # Transcript Selection and Testing (outside the form)
+
+            # Version selection for testing (separate from editing version)
+            test_version = st.selectbox(
+                "Select Version to Test",
+                [selected_task_option] + versions if versions else [selected_task_option],
+                key="test_version_select",
+                help="Select which version to test with Claude"
+            )
+
+            # Transcript Selection and Testing
             transcript_options = get_available_transcripts()
             selected_transcript = st.selectbox(
                 "Select Transcript",
@@ -234,21 +251,20 @@ def main():
                         height=300
                     )
 
-                    if st.button("Test with Claude"):
+                    if st.button("Test with Claude", type="primary"):
                         st.subheader("Claude Response")
                         response_placeholder = st.empty()
                         full_response = ""
 
                         try:
                             # Stream the response
-                            for chunk in test_with_claude(current_task, transcript_text):
+                            for chunk in test_with_claude(test_version, transcript_text):
                                 if isinstance(chunk, bytes):
                                     chunk = chunk.decode()
                                 full_response += chunk
                                 response_placeholder.markdown(full_response)
                         except Exception as e:
                             st.error(f"Error testing with Claude: {str(e)}")
-
 
 if __name__ == "__main__":
     main()

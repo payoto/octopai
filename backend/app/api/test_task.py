@@ -6,6 +6,7 @@ from pathlib import Path
 from ..task_data.task_loader import TaskBuilder
 from ..services.anthropic_service import anthropic_stream_response
 from ..models import AnthropicRequest, ClientMessage
+from ..core.logging import logger
 
 router = APIRouter()
 
@@ -17,6 +18,8 @@ class TestTaskRequest(BaseModel):
 async def test_task(request: TestTaskRequest):
     # Load task
     task_name = request.task_version.split('_v')[0]
+    logger.info(f"Testing task {task_name} with version {request.task_version}")
+
     task_builder = TaskBuilder(task_name)
 
     # Get task prompt
@@ -48,13 +51,18 @@ async def test_task(request: TestTaskRequest):
     )
 
     # Create Anthropic request
+    # Note: task_prompt returns a dict with 'system' and 'user' keys
     anthropic_request = AnthropicRequest(
-        messages=[ClientMessage(role="user", content=task_prompt.user)],
-        system_message=task_prompt.system,
+        messages=[ClientMessage(role="user", content=task_prompt["user"])],
+        system_message=task_prompt["system"],
         model="claude-3-5-haiku-20241022",
         max_tokens=1024,
         temperature=0.7
     )
+
+    logger.info("Created Anthropic request")
+    logger.info(f"System message: {anthropic_request.system_message[:100]}...")
+    logger.info(f"User message: {anthropic_request.messages[-1].content[:100]}...")
 
     # Stream response
     return StreamingResponse(
