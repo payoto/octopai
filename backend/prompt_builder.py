@@ -5,6 +5,7 @@ from datetime import datetime
 import json
 from typing import Optional
 import requests
+import shutil
 
 from app.pipelines.transcript_processing import (
     format_transcript_for_llm,
@@ -66,15 +67,23 @@ def read_file_content(file_path: Path) -> str:
         return ""
 
 def create_new_task(task_name: str):
-    """Create a new task with empty files."""
+    """Create a new task with all required files."""
     base_path = Path(f"app/task_data/{task_name}")
     base_path.mkdir(exist_ok=True)
 
-    # Create empty files
-    for file_name in ["answer_format.txt", "description.txt",
-                     "good_responses.txt", "bad_responses.txt", "triggers.txt"]:
+    # Default content for each file
+    default_content = {
+        "answer_format.txt": "Provide your answer in a clear and concise format.",
+        "description.txt": "Enter task description here.",
+        "good_responses.txt": "Example of a good response",
+        "bad_responses.txt": "Example of a bad response",
+        "triggers.txt": "Example trigger"
+    }
+
+    # Create each file with default content
+    for file_name, content in default_content.items():
         file_path = base_path / file_name
-        file_path.touch()
+        file_path.write_text(content)
 
 def save_task_version(task_name: str, file_contents: dict) -> str:
     """Save a new version of the task files."""
@@ -128,6 +137,38 @@ def process_transcript(transcript_path: str) -> Optional[str]:
         st.error(f"Error processing transcript: {str(e)}")
         return None
 
+def save_temp_version(task_name: str, file_contents: dict) -> str:
+    """Save a temporary version for Claude testing."""
+    timestamp = datetime.now().strftime("%H%M%S")  # Include seconds for temp versions
+    version_name = f"{task_name}_temp-{timestamp}"
+    version_path = Path(f"app/task_data/{version_name}")
+
+    # Create temp directory
+    version_path.mkdir(exist_ok=True)
+
+    # Save each file with updated content
+    for file_name, content in file_contents.items():
+        file_path = version_path / f"{file_name}.txt"
+        file_path.write_text(content)
+
+    return version_name
+
+def cleanup_temp_versions(task_name: str):
+    """Clean up temporary versions that are older than 1 hour."""
+    base_dir = Path("app/task_data")
+    current_time = datetime.now()
+
+    for path in base_dir.glob(f"{task_name}_temp-*"):
+        try:
+            # Get timestamp from directory name
+            timestamp_str = path.name.split("-")[1]
+            version_time = datetime.strptime(timestamp_str, "%H%M%S")
+
+            # If version is from a different day or more than 1 hour old, remove it
+            if (current_time - version_time).total_seconds() > 3600:
+                shutil.rmtree(path)
+        except (IndexError, ValueError):
+            continue
 
 
 def main():
@@ -167,42 +208,48 @@ def main():
                     help="Select original task or a specific version to edit"
                 )
 
-            # Task Editor (no form)
-            task_files = get_task_files(current_task)
+                # Task Editor (no form)
+                task_files = get_task_files(current_task)
 
             st.subheader("Description")
             description = st.text_area(
                 "Description",
                 read_file_content(task_files["description"]),
-                height=100
+                height=100,
+                key="description",
             )
 
             st.subheader("Answer Format")
             answer_format = st.text_area(
                 "Answer Format",
                 read_file_content(task_files["answer_format"]),
-                height=100
+                height=100,
+                key="answer_format"
+
             )
 
             st.subheader("Good Responses")
             good_responses = st.text_area(
                 "Good Responses",
                 read_file_content(task_files["good_responses"]),
-                height=100
+                height=100,
+                key="good_responses"
             )
 
             st.subheader("Bad Responses")
             bad_responses = st.text_area(
                 "Bad Responses",
                 read_file_content(task_files["bad_responses"]),
-                height=100
+                height=100,
+                key="bad_responses",
             )
 
             st.subheader("Triggers")
             triggers = st.text_area(
                 "Triggers",
                 read_file_content(task_files["triggers"]),
-                height=100
+                height=100,
+                key="triggers",
             )
 
             # Save button at the bottom
@@ -225,13 +272,9 @@ def main():
         with col2:
             st.subheader("Test with Claude")
 
-            # Version selection for testing (separate from editing version)
-            test_version = st.selectbox(
-                "Select Version to Test",
-                [selected_task_option] + versions if versions else [selected_task_option],
-                key="test_version_select",
-                help="Select which version to test with Claude"
-            )
+            # Before testing, save current state as temporary version
+
+
 
             # Transcript Selection and Testing
             transcript_options = get_available_transcripts()
@@ -253,12 +296,26 @@ def main():
 
                     if st.button("Test with Claude", type="primary"):
                         st.subheader("Claude Response")
+
+                        # Get current content
+                        file_contents = {
+                            "description": description,
+                            "answer_format": answer_format,
+                            "good_responses": good_responses,
+                            "bad_responses": bad_responses,
+                            "triggers": triggers
+                        }
+
+                        # Save as temporary version
+                        cleanup_temp_versions(selected_task_option)
+                        temp_version = save_temp_version(selected_task_option, file_contents)
+
                         response_placeholder = st.empty()
                         full_response = ""
 
                         try:
                             # Stream the response
-                            for chunk in test_with_claude(test_version, transcript_text):
+                            for chunk in test_with_claude(temp_version, transcript_text):
                                 if isinstance(chunk, bytes):
                                     chunk = chunk.decode()
                                 full_response += chunk

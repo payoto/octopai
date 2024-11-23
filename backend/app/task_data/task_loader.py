@@ -1,4 +1,4 @@
-from typing import TypedDict
+from typing import TypedDict, Optional, List
 import argparse
 import dataclasses
 from pprint import pprint
@@ -16,68 +16,78 @@ class TaskPrompt(TypedDict):
     tools: dict
 
 
+
+REQUIRED_FILES = [
+    "answer_format.txt",
+    "description.txt",
+    "good_responses.txt",
+    "bad_responses.txt",
+    "triggers.txt"
+]
+
 @dataclasses.dataclass
 class TaskBuilder:
     name: str
+    version: Optional[str] = None
     description: str = ""
     answer_format: str = ""
-    good_responses: list[str] = dataclasses.field(default_factory=list)
-    bad_responses: list[str] = dataclasses.field(default_factory=list)
-    triggers: list[str] = dataclasses.field(default_factory=list)
+    good_responses: List[str] = dataclasses.field(default_factory=list)
+    bad_responses: List[str] = dataclasses.field(default_factory=list)
+    triggers: List[str] = dataclasses.field(default_factory=list)
 
     def __post_init__(self):
-        folder = Path(__file__).resolve().parent / self.name
+        # Determine the correct folder based on version
+        if self.version:
+            folder = Path(__file__).resolve().parent / self.version
+        else:
+            folder = Path(__file__).resolve().parent / self.name
+
+        if not folder.exists():
+            raise ValueError(f"Task folder {folder} does not exist")
+
+        # Verify all required files exist
+        missing_files = [f for f in REQUIRED_FILES if not (folder / f).exists()]
+        if missing_files:
+            raise ValueError(f"Missing required files in {folder}: {', '.join(missing_files)}")
+
+        self.name = self.name  # Keep original name even when using version
+
         # Read each file and assign to the corresponding attribute
-        self.name = folder.name
-        for file in ["answer_format", "description"]:
-            file_path = folder / f"{file}.txt"
-            setattr(self, file, file_path.read_text().strip())
+        self.description = (folder / "description.txt").read_text().strip()
+        self.answer_format = (folder / "answer_format.txt").read_text().strip()
 
-
-        for file in ["good_responses", "bad_responses", "triggers"]:
-            file_path = folder / f"{file}.txt"
+        # Read list files
+        for file_name in ["good_responses", "bad_responses", "triggers"]:
+            content = (folder / f"{file_name}.txt").read_text().strip()
             setattr(
                 self,
-                file,
-                [
-                    line.strip()
-                    for line in file_path.read_text().strip().split("\n")
-                    if line.strip()
-                ],
+                file_name,
+                [line.strip() for line in content.split("\n") if line.strip()]
             )
 
     def get_task_trigger(self) -> str:
         """Assembles the description of the task using the first line of the description and
-        up to 2 trigger examples.
-        """
-        # Get first line of description
+        up to 2 trigger examples."""
         first_line = self.description.split("\n")[0].strip()
-        print(self)
-        # Select up to 2 random triggers
-        # selected_triggers = random.sample(self.triggers, min(2, len(self.triggers)))
         selected_triggers = self.triggers[:2]
 
-        # Combine into final trigger
         trigger_text = f"{self.name}: {first_line}\n\nExample messages that indicate this action should be used:\n"
         trigger_text += "\n".join(f"- {trigger}" for trigger in selected_triggers)
 
         return trigger_text
 
-    def get_task_prompt(self, system_prompt: str, user_prompt: str, **kwargs) -> TaskPrompt:
+    def get_task_prompt(self, system_prompt: str, user_prompt: str, **kwargs) -> dict:
         """Creates a TaskPrompt by formatting the provided system and user prompts with
-        the task's attributes.
-        """
-        # Format system prompt with all available attributes
+        the task's attributes."""
         formatted_system = system_prompt.format(
             description=self.description,
-            good_responses=self.good_responses,
-            bad_responses=self.bad_responses,
-            triggers=self.triggers,
+            good_responses="\n".join(f"- {r}" for r in self.good_responses),
+            bad_responses="\n".join(f"- {r}" for r in self.bad_responses),
+            triggers="\n".join(f"- {t}" for t in self.triggers),
             answer_format=self.answer_format,
             **kwargs
         )
 
-        # Format user prompt
         formatted_user = user_prompt.format(
             description=self.description,
             good_responses=self.good_responses,
@@ -87,12 +97,11 @@ class TaskBuilder:
             **kwargs
         )
 
-        return TaskPrompt(
-            system=formatted_system,
-            user=formatted_user,
-            tools={},  # Empty dict as per TaskPrompt definition
-        )
-
+        return {
+            "system": formatted_system,
+            "user": formatted_user,
+            "tools": {}
+        }
 
 def get_parser() -> argparse.ArgumentParser:
     """Argument parser should collect a task which have the same name as the

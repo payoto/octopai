@@ -16,11 +16,16 @@ class TestTaskRequest(BaseModel):
 
 @router.post("/api/test_task")
 async def test_task(request: TestTaskRequest):
-    # Load task
-    task_name = request.task_version.split('_v')[0]
+    # Extract task name and handle temp versions
+    if "_temp-" in request.task_version:
+        task_name = request.task_version.split('_temp-')[0]
+    else:
+        task_name = request.task_version.split('_v')[0]
+
     logger.info(f"Testing task {task_name} with version {request.task_version}")
 
-    task_builder = TaskBuilder(task_name)
+    # Initialize TaskBuilder with specific version
+    task_builder = TaskBuilder(task_name, version=request.task_version)
 
     # Get task prompt
     system_prompt = """
@@ -51,7 +56,6 @@ async def test_task(request: TestTaskRequest):
     )
 
     # Create Anthropic request
-    # Note: task_prompt returns a dict with 'system' and 'user' keys
     anthropic_request = AnthropicRequest(
         messages=[ClientMessage(role="user", content=task_prompt["user"])],
         system_message=task_prompt["system"],
