@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from .api.chat import router as chat_router
 from .api.hyde import router as hyde_router
 from .api.meeting import router as meeting_router
+from .api.test_task import router as task_router
 from .pipelines.load_documents import load_documents
 from .core.context import request_context_manager
 import uuid
@@ -21,6 +22,7 @@ async def context_middleware(request, call_next):
 app.include_router(chat_router)
 app.include_router(hyde_router)
 app.include_router(meeting_router)
+app.include_router(task_router)
 
 if not Path("./database/chromadb/chroma.sqlite3").exists():
     load_documents()
