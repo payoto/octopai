@@ -30,7 +30,7 @@ def init_session_state():
     if 'api_key' not in st.session_state:
         st.session_state.api_key = os.getenv("API_KEY", "")
     if 'backend_url' not in st.session_state:
-        st.session_state.backend_url = os.getenv("BACKEND_URL", "http://127.0.0.1:8000")
+        st.session_state.backend_url = os.getenv("BACKEND_URL", "http://127.0.0.1:8001")
     if 'meeting_url' not in st.session_state:
         st.session_state.meeting_url = ""
     if 'last_refresh' not in st.session_state:
