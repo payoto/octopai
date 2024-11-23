@@ -231,7 +231,7 @@ else:
     Action = create_action_enum()
 
 
-def get_task_by_action(action: "Action") -> TaskBuilder | None:
+def get_task_by_action(action: "Action", version=None) -> TaskBuilder | None:
     """Get the TaskBuilder instance corresponding to an Action enum value."""
     tasks = discover_tasks()
     for task in tasks:
