@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 from datetime import datetime
 import json
+import time
 from typing import Optional
 import requests
 import shutil
@@ -170,7 +171,6 @@ def cleanup_temp_versions(task_name: str):
         except (IndexError, ValueError):
             continue
 
-
 def main():
     st.title("Task Builder Manager")
 
@@ -208,73 +208,69 @@ def main():
                     help="Select original task or a specific version to edit"
                 )
 
-                # Task Editor (no form)
-                task_files = get_task_files(current_task)
+            # Get task files after version selection
+            task_files = get_task_files(current_task)
 
-            st.subheader("Description")
-            description = st.text_area(
-                "Description",
-                read_file_content(task_files["description"]),
-                height=100,
-                key="description",
-            )
+            # Create a container for the editor to ensure proper updating
+            editor_container = st.container()
 
-            st.subheader("Answer Format")
-            answer_format = st.text_area(
-                "Answer Format",
-                read_file_content(task_files["answer_format"]),
-                height=100,
-                key="answer_format"
+            with editor_container:
+                st.subheader("Description")
+                description = st.text_area(
+                    "Description",
+                    value=read_file_content(task_files["description"]),
+                    height=100,
+                    key=f"description_{current_task}"  # Add version to key
+                )
 
-            )
+                st.subheader("Answer Format")
+                answer_format = st.text_area(
+                    "Answer Format",
+                    value=read_file_content(task_files["answer_format"]),
+                    height=100,
+                    key=f"answer_format_{current_task}"
+                )
 
-            st.subheader("Good Responses")
-            good_responses = st.text_area(
-                "Good Responses",
-                read_file_content(task_files["good_responses"]),
-                height=100,
-                key="good_responses"
-            )
+                st.subheader("Good Responses")
+                good_responses = st.text_area(
+                    "Good Responses",
+                    value=read_file_content(task_files["good_responses"]),
+                    height=100,
+                    key=f"good_responses_{current_task}"
+                )
 
-            st.subheader("Bad Responses")
-            bad_responses = st.text_area(
-                "Bad Responses",
-                read_file_content(task_files["bad_responses"]),
-                height=100,
-                key="bad_responses",
-            )
+                st.subheader("Bad Responses")
+                bad_responses = st.text_area(
+                    "Bad Responses",
+                    value=read_file_content(task_files["bad_responses"]),
+                    height=100,
+                    key=f"bad_responses_{current_task}"
+                )
 
-            st.subheader("Triggers")
-            triggers = st.text_area(
-                "Triggers",
-                read_file_content(task_files["triggers"]),
-                height=100,
-                key="triggers",
-            )
+                st.subheader("Triggers")
+                triggers = st.text_area(
+                    "Triggers",
+                    value=read_file_content(task_files["triggers"]),
+                    height=100,
+                    key=f"triggers_{current_task}"
+                )
 
-            # Save button at the bottom
-            if st.button("Save New Version", type="primary"):
-                file_contents = {
-                    "description": description,
-                    "answer_format": answer_format,
-                    "good_responses": good_responses,
-                    "bad_responses": bad_responses,
-                    "triggers": triggers
-                }
-                new_version = save_task_version(selected_task_option, file_contents)
-                st.success(f"✅ Successfully saved version: {new_version}")
-
-                # Add a small delay to show the success message before rerunning
-                import time
-                time.sleep(1)
-                st.rerun()
+                # Save button at the bottom
+                if st.button("Save New Version", type="primary"):
+                    file_contents = {
+                        "description": description,
+                        "answer_format": answer_format,
+                        "good_responses": good_responses,
+                        "bad_responses": bad_responses,
+                        "triggers": triggers
+                    }
+                    new_version = save_task_version(selected_task_option, file_contents)
+                    st.success(f"✅ Successfully saved version: {new_version}")
+                    time.sleep(1)
+                    st.rerun()
 
         with col2:
             st.subheader("Test with Claude")
-
-            # Before testing, save current state as temporary version
-
-
 
             # Transcript Selection and Testing
             transcript_options = get_available_transcripts()
@@ -291,7 +287,8 @@ def main():
                     transcript_text = st.text_area(
                         "Edit Processed Transcript",
                         processed_transcript,
-                        height=300
+                        height=300,
+                        key="transcript_edit"
                     )
 
                     if st.button("Test with Claude", type="primary"):
@@ -322,6 +319,5 @@ def main():
                                 response_placeholder.markdown(full_response)
                         except Exception as e:
                             st.error(f"Error testing with Claude: {str(e)}")
-
 if __name__ == "__main__":
     main()
