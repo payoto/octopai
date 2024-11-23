@@ -172,6 +172,7 @@ def cleanup_temp_versions(task_name: str):
             continue
 
 def main():
+    st.set_page_config(page_title="Task Builder", layout="wide")
     st.title("Task Builder Manager")
 
     # Task Selection or Creation
