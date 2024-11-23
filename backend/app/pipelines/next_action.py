@@ -7,9 +7,16 @@ This uses anthropic tool use to choose what the most appropriate actions is
 """
 from typing import List, Dict, Union, TypedDict
 import time
+import argparse
 import anthropic
+from pathlib import Path
 import os
 from ..task_data.task_loader import Action, discover_tasks, get_task_by_action
+from ..pipelines.transcript_processing import load_transcript, format_transcript_for_llm, merge_into_user_messages
+
+current_folder = Path(__file__).resolve().parent
+backend_root = current_folder.parents[1]
+
 
 class ActionPick(TypedDict):
     action: Action | None
@@ -118,3 +125,32 @@ class ActionPicker:
             usage=response.usage.to_json(),
             duration=time.time() - start,
         )
+
+def get_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description="Process conversation transcripts to determine appropriate actions")
+    parser.add_argument(
+        "--transcript",
+        default=str(backend_root / "logs/transcripts/transcript_better.json"),
+        type=str,
+        help="Path to the transcript JSON file"
+    )
+    return parser
+
+def main():
+    parser = get_parser()
+    args = parser.parse_args()
+
+    # Load and process transcript
+    transcript = load_transcript(args.transcript)
+    formatted_transcript = format_transcript_for_llm(merge_into_user_messages(transcript))
+
+    # Get and print action
+    picker = ActionPicker()
+    result = picker.pick_action_from_transcript(formatted_transcript)
+
+    print(f"Action: {result['action'].value if result['action'] else 'None'}")
+    print(f"Confidence: {result['confidence']:.2f}")
+    print(f"Explanation: {result['explanation']}")
+
+if __name__ == "__main__":
+    main()

@@ -194,7 +194,6 @@ def discover_tasks() -> List[TaskBuilder]:
             # Check if all required files exist
             if all((task_dir / file).exists() for file in REQUIRED_FILES):
                 task_class = CUSTOM_TASK_CLASS_REGISTRATIONS.get(task_dir.name, TaskBuilder)
-                print(f"Discovered task: {task_dir.name}, will use task class {task_class}")
                 tasks.append(task_class(task_dir.name))
 
     return tasks

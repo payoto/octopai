@@ -320,5 +320,6 @@ def main():
                                 response_placeholder.markdown(full_response)
                         except Exception as e:
                             st.error(f"Error testing with Claude: {str(e)}")
+
 if __name__ == "__main__":
     main()
