@@ -210,7 +210,7 @@ def display_combined_chat(transcripts, chat_messages, backend_messages=None):
                 if msg['type'] == 'sentiment':
                     with st.chat_message("assistant", avatar="🐙"):
                         content = msg['content']
-                        with st.expander("Sentiment: " + content["sentiment"]):
+                        with st.expander("Sentiment: " + str(content["sentiment"])):
                             st.markdown(
                                 f"""<div class="sentiment-box">
                                 <p><strong>🎭 Sentiment Detected:</strong> {content['sentiment']}</p>
@@ -222,7 +222,7 @@ def display_combined_chat(transcripts, chat_messages, backend_messages=None):
                 elif msg['type'] == 'action':
                     with st.chat_message("assistant", avatar="🐙"):
                         content = msg['content']
-                        with st.expander("Action: " + content["action"]):
+                        with st.expander("Action: " + str(content["action"])):
                             st.markdown(
                                 f"""<div class="action-box">
                                 <p><strong>🎯 Action:</strong> {content['action']}</p>
@@ -232,22 +232,23 @@ def display_combined_chat(transcripts, chat_messages, backend_messages=None):
                                 unsafe_allow_html=True
                             )
                 elif msg['type'] == 'bot_message':
-                    with st.chat_message("assistant", avatar="🐙"):
-                        st.markdown("**Octopai is suggesting:**")
-                        text = msg['content']
-                        if "<hyde>" in text:
-                            reasoning, text = text.split("</hyde>")
-                            with st.expander("RAG thinking"):
-                                st.markdown(reasoning)
-                        st.markdown(text)
-                        if st.button("Send to chat", key=msg['content']+str(uuid.uuid4().hex)):
-                            success = send_message(
-                                st.session_state.api_key,
-                                st.session_state.bot_id,
-                                text,
-                            )
-                            if success:
-                                st.success("Message sent!" )
-                            else:
-                                st.error("Failed to send message")
-                            time.sleep(1)
+                    text = msg['content']
+                    if text:
+                        with st.chat_message("assistant", avatar="🐙"):
+                            st.markdown("**Octopai is suggesting:**")
+                            if "<hyde>" in text:
+                                reasoning, text = text.split("</hyde>")
+                                with st.expander("RAG thinking"):
+                                    st.markdown(reasoning)
+                            st.markdown(text)
+                            if st.button("Send to chat", key=msg['content']+str(uuid.uuid4().hex)):
+                                success = send_message(
+                                    st.session_state.api_key,
+                                    st.session_state.bot_id,
+                                    text,
+                                )
+                                if success:
+                                    st.success("Message sent!" )
+                                else:
+                                    st.error("Failed to send message")
+                                time.sleep(1)

@@ -8,7 +8,7 @@ from .. import models
 from ..services.anthropic_service import anthropic_stream_response
 from ..core.logging import logger
 from ..pipelines.sentiment import SentimentClassificationOutput, Sentiment
-from ..pipelines.transcript_processing import format_transcript_for_llm, merge_into_user_messages
+from ..pipelines.transcript_processing import format_transcript_for_llm, merge_into_user_messages, extract_last_minutes
 from ..pipelines.next_action import ActionPick, Action, ActionPicker
 from ..task_data.task_loader import Action, discover_tasks, get_task_by_action
 
@@ -67,7 +67,7 @@ def yield_one_message_annotation_of_each_type(transcript: models.Transcript) -> 
 
 def real_meeting_processing(transcript: models.Transcript):
     # Pick the action that needs doing
-    formatted_transcript = format_transcript_for_llm(merge_into_user_messages(transcript))
+    formatted_transcript = format_transcript_for_llm(merge_into_user_messages(extract_last_minutes(transcript, 180)))
     picker = ActionPicker()
     print("Picking action")
     picked_action = picker.pick_action_from_transcript(formatted_transcript)
@@ -83,11 +83,13 @@ def real_meeting_processing(transcript: models.Transcript):
 
         # Run the action
 
-        if picked_action["action"] is not None and picked_action["action"] != Action.LET_THE_CONVERSATION_CONTINUE:
+        if picked_action["action"] is not None:
             print(f"Running action {picked_action['action']}")
-
-            task_builder = get_task_by_action(picked_action["action"])
-            task_output = task_builder.run_task(formatted_transcript)
+            if picked_action["action"] != Action.CONTINUE_CONVERSATION:
+                task_builder = get_task_by_action(picked_action["action"])
+                task_output = task_builder.run_task(formatted_transcript)
+            else:
+                task_output = {"role": "let_it_flow", "content": ""}
             print("Completed action!")
             yield models.MessageAnnotations(
                 sentiment=None,
