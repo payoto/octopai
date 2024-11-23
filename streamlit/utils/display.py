@@ -121,8 +121,10 @@ def merge_messages_by_timestamp(transcripts: List[Dict], backend_messages: List[
                 all_messages.append({
                     'type': 'bot_message',
                     'timestamp': timestamp,
-                    'content': msg['bot_message']
+                    'content': msg['bot_message']["content"]
                 })
+            else:
+                st.warning(f"Unknown message type: {msg}")
 
     # Sort all messages by timestamp
     return sorted(all_messages, key=lambda x: x['timestamp'])
@@ -184,26 +186,30 @@ def display_combined_chat(transcripts, chat_messages, backend_messages=None):
                 if msg['type'] == 'sentiment':
                     with st.chat_message("assistant", avatar="🐙"):
                         content = msg['content']
-                        st.markdown(
-                            f"""<div class="sentiment-box">
-                            <p><strong>🎭 Sentiment Detected:</strong> {content['sentiment']}</p>
-                            <p><strong>💭 Explanation:</strong> {content['explanation']}</p>
-                            <p><strong>📊 Confidence:</strong> {content['confidence']:.2%}</p>
-                            </div>""",
-                            unsafe_allow_html=True
-                        )
+                        with st.expander("Sentiment: " + content["sentiment"]):
+                            st.markdown(
+                                f"""<div class="sentiment-box">
+                                <p><strong>🎭 Sentiment Detected:</strong> {content['sentiment']}</p>
+                                <p><strong>💭 Explanation:</strong> {content['explanation']}</p>
+                                <p><strong>📊 Confidence:</strong> {content['confidence']:.2%}</p>
+                                </div>""",
+                                unsafe_allow_html=True
+                            )
                 elif msg['type'] == 'action':
                     with st.chat_message("assistant", avatar="🐙"):
                         content = msg['content']
-                        st.markdown(
-                            f"""<div class="action-box">
-                            <p><strong>🎯 Action:</strong> {content['action']}</p>
-                            <p><strong>💭 Explanation:</strong> {content['explanation']}</p>
-                            <p><strong>📊 Confidence:</strong> {content['confidence']:.2%}</p>
-                            </div>""",
-                            unsafe_allow_html=True
-                        )
+                        with st.expander("Action: " + content["action"]):
+                            st.markdown(
+                                f"""<div class="action-box">
+                                <p><strong>🎯 Action:</strong> {content['action']}</p>
+                                <p><strong>💭 Explanation:</strong> {content['explanation']}</p>
+                                <p><strong>📊 Confidence:</strong> {content['confidence']:.2%}</p>
+                                </div>""",
+                                unsafe_allow_html=True
+                            )
                 elif msg['type'] == 'bot_message':
-                    st.chat_message("assistant", avatar="🤖").markdown(msg['content'])
+                    with st.chat_message("assistant", avatar="🐙"):
+                        st.markdown("**Octopai is suggesting:**")
+                        st.markdown(msg['content'])
 
         current_row += 1

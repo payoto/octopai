@@ -2,7 +2,7 @@ import requests
 from typing import Tuple, Dict, Any
 import json
 
-def send_to_backend(backend_url: str, meeting_url: str, host_name: str, transcripts: list) -> Tuple[bool, Any]:
+def send_to_backend(backend_url: str, meeting_url: str, host_name: str, transcripts: list, dummy: bool) -> Tuple[bool, Any]:
     """
     Send meeting data to the backend
 
@@ -15,7 +15,8 @@ def send_to_backend(backend_url: str, meeting_url: str, host_name: str, transcri
         payload = {
             "url": meeting_url,
             "host_name": host_name,
-            "transcript": transcripts
+            "transcript": transcripts,
+            "fake": dummy,
         }
 
         response = requests.post(

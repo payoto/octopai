@@ -51,7 +51,7 @@ def main():
     # Sidebar Controls
     with st.sidebar:
         st.header("Chat Controls")
-
+        dummy_backend = st.toggle("🔇 Dummy Backend", value=False)
         # Auto-refresh toggle
         auto_refresh = st.toggle('🔄 Auto-refresh', value=True)
 
@@ -65,7 +65,8 @@ def main():
                         st.session_state.backend_url,
                         st.session_state.meeting_url,
                         st.session_state.host_name,
-                        transcripts
+                        transcripts,
+                        dummy_backend
                     )
                     if success and isinstance(response, list):
                         st.session_state.backend_messages = response
@@ -139,7 +140,8 @@ def main():
                                     st.session_state.backend_url,
                                     meeting_url,
                                     host_name,
-                                    transcripts
+                                    transcripts,
+                                    dummy_backend
                                 )
                                 if success:
                                     if isinstance(response, list):
@@ -210,7 +212,8 @@ def main():
                         st.session_state.backend_url,
                         st.session_state.meeting_url,
                         st.session_state.host_name,
-                        transcripts
+                        transcripts,
+                        dummy_backend
                     )
                     if success and isinstance(response, list):
                         st.session_state.backend_messages = response
