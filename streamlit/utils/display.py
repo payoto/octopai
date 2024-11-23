@@ -138,8 +138,7 @@ def display_combined_chat(transcripts, chat_messages, backend_messages=None):
     all_messages = merge_messages_by_timestamp(transcripts or [], backend_messages or [])
 
     # Initialize side by side containers
-    containers = SideBySideContainers([1, 1], align=True)
-    current_row = 0
+    containers = SideBySideContainers([1, 1], align=st.toggle("Align messages", True))
 
     # Style for boxes
     st.markdown("""
@@ -165,24 +164,27 @@ def display_combined_chat(transcripts, chat_messages, backend_messages=None):
     """, unsafe_allow_html=True)
 
     # Display headers
-    with containers.get_box(current_row, 0):
+    col1, col2 = containers.next_row()
+    with col1:
         st.subheader("Transcript")
-    with containers.get_box(current_row, 1):
+    with col2:
         st.subheader("Octopai Analysis")
-    current_row += 1
+
+    col1, col2 = containers.next_row()
 
     # Display messages
     for msg in all_messages:
         if msg['type'] == 'transcript':
+            col1, col2 = containers.next_row()
             # Get transcript container
-            with containers.get_box(current_row, 0):
+            with col1:
                 avatar = get_speaker_avatar(msg['speaker'])
                 st.chat_message("user", avatar=avatar).markdown(
                     f"**{msg['speaker']}**: {msg['text']}"
                 )
         else:
             # Get AI analysis container
-            with containers.get_box(current_row, 1):
+            with col2:
                 if msg['type'] == 'sentiment':
                     with st.chat_message("assistant", avatar="🐙"):
                         content = msg['content']
@@ -211,5 +213,3 @@ def display_combined_chat(transcripts, chat_messages, backend_messages=None):
                     with st.chat_message("assistant", avatar="🐙"):
                         st.markdown("**Octopai is suggesting:**")
                         st.markdown(msg['content'])
-
-        current_row += 1
