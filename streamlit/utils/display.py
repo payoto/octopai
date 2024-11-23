@@ -2,6 +2,28 @@ import streamlit as st
 from typing import List, Dict, Generator, Any
 from streamlit.delta_generator import DeltaGenerator
 import random
+from pathlib import Path
+import requests
+import uuid
+import time
+
+def send_message(api_key, bot_id, message):
+    if Path(bot_id).exists():
+        return True
+    url = f"https://us-west-2.recall.ai/api/v1/bot/{bot_id}/send_chat_message"
+    headers = {
+        "accept": "application/json",
+        "content-type": "application/json",
+        "Authorization": api_key.strip()
+    }
+    payload = {"message": message}
+    try:
+        response = requests.post(url, headers=headers, json=payload)
+        response.raise_for_status()
+        return True
+    except requests.exceptions.RequestException as e:
+        st.error(f"Failed to send message: {str(e)}")
+        return False
 
 class SideBySideContainers:
     def __init__(self, column_layout, max_rows: int = 100, align: bool = True) -> None:
@@ -212,4 +234,20 @@ def display_combined_chat(transcripts, chat_messages, backend_messages=None):
                 elif msg['type'] == 'bot_message':
                     with st.chat_message("assistant", avatar="🐙"):
                         st.markdown("**Octopai is suggesting:**")
-                        st.markdown(msg['content'])
+                        text = msg['content']
+                        if "<hyde>" in text:
+                            reasoning, text = text.split("</hyde>")
+                            with st.expander("RAG thinking"):
+                                st.markdown(reasoning)
+                        st.markdown(text)
+                        if st.button("Send to chat", key=msg['content']+str(uuid.uuid4().hex)):
+                            success = send_message(
+                                st.session_state.api_key,
+                                st.session_state.bot_id,
+                                text,
+                            )
+                            if success:
+                                st.success("Message sent!" )
+                            else:
+                                st.error("Failed to send message")
+                            time.sleep(1)

@@ -56,7 +56,8 @@ if 'bot_id' in st.session_state and st.session_state.bot_id and 'api_key' in st.
                     st.session_state.backend_url,
                     st.session_state.meeting_url,
                     st.session_state.host_name,
-                    transcripts
+                    transcripts,
+                    dummy=False
                 )
 
                 # Add to history

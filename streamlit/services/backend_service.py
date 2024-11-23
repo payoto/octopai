@@ -1,6 +1,7 @@
 import requests
 from typing import Tuple, Dict, Any
 import json
+import streamlit as st
 
 def send_to_backend(backend_url: str, meeting_url: str, host_name: str, transcripts: list, dummy: bool) -> Tuple[bool, Any]:
     """
@@ -11,6 +12,8 @@ def send_to_backend(backend_url: str, meeting_url: str, host_name: str, transcri
             - If successful: (True, response_data)
             - If failed: (False, error_message)
     """
+    if "_stored_backend_messages" not in st.session_state:
+        st.session_state._stored_backend_messages = []
     try:
         payload = {
             "url": meeting_url,
@@ -31,8 +34,9 @@ def send_to_backend(backend_url: str, meeting_url: str, host_name: str, transcri
         for chunk in response.iter_content(chunk_size=8192):
             if chunk:
                 annotations.append(process_chunk(chunk))
+        st.session_state._stored_backend_messages.extend(annotations)
         # Try to parse response as JSON
-        return True, annotations
+        return True, st.session_state._stored_backend_messages
 
     except requests.exceptions.RequestException as e:
         return False, {
