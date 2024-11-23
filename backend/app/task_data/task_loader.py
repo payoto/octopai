@@ -230,13 +230,13 @@ else:
     Action = create_action_enum()
 
 
-def get_task_by_action(action: "Action", version=None) -> TaskBuilder | None:
+def get_task_by_action(action: "Action", version=None) -> TaskBuilder:
     """Get the TaskBuilder instance corresponding to an Action enum value."""
     tasks = discover_tasks()
     for task in tasks:
         if task.name.lower() == action.value:
             return task
-    return None
+    raise ValueError(f"Task not found for action {action}")
 
 
 def get_parser() -> argparse.ArgumentParser:

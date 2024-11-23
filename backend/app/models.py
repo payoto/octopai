@@ -84,3 +84,4 @@ class MeetingPart(BaseModel):
     url: str
     host_name: str
     transcript: Transcript
+    fake: Optional[bool] = False

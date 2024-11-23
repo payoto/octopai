@@ -1,0 +1,1 @@
+Analyse last person said in the transcript. Help enrich the conversation by providing encouragement and follow up questions 
