@@ -5,7 +5,11 @@ from pprint import pprint
 from pathlib import Path
 from enum import Enum
 
-from ..pipelines.transcript_processing import format_transcript_for_llm, load_transcript, merge_into_user_messages
+from ..pipelines.transcript_processing import (
+    format_transcript_for_llm,
+    load_transcript,
+    merge_into_user_messages,
+)
 
 current_folder = Path(__file__).resolve().parent
 backend_root = current_folder.parents[1]
@@ -17,13 +21,12 @@ class TaskPrompt(TypedDict):
     tools: dict
 
 
-
 REQUIRED_FILES = [
     "answer_format.txt",
     "description.txt",
     "good_responses.txt",
     "bad_responses.txt",
-    "triggers.txt"
+    "triggers.txt",
 ]
 
 
@@ -50,7 +53,9 @@ class TaskBuilder:
         # Verify all required files exist
         missing_files = [f for f in REQUIRED_FILES if not (folder / f).exists()]
         if missing_files:
-            raise ValueError(f"Missing required files in {folder}: {', '.join(missing_files)}")
+            raise ValueError(
+                f"Missing required files in {folder}: {', '.join(missing_files)}"
+            )
 
         self.name = self.name  # Keep original name even when using version
 
@@ -64,7 +69,7 @@ class TaskBuilder:
             setattr(
                 self,
                 file_name,
-                [line.strip() for line in content.split("\n") if line.strip()]
+                [line.strip() for line in content.split("\n") if line.strip()],
             )
 
     def get_task_trigger(self) -> str:
@@ -91,7 +96,7 @@ class TaskBuilder:
             bad_responses="\n".join(f"- {r}" for r in self.bad_responses),
             triggers="\n".join(f"- {t}" for t in self.triggers),
             answer_format=self.answer_format,
-            **kwargs
+            **kwargs,
         )
 
         formatted_user = user_prompt.format(
@@ -100,14 +105,11 @@ class TaskBuilder:
             bad_responses=self.bad_responses,
             triggers=self.triggers,
             answer_format=self.answer_format,
-            **kwargs
+            **kwargs,
         )
 
-        return {
-            "system": formatted_system,
-            "user": formatted_user,
-            "tools": {}
-        }
+        return {"system": formatted_system, "user": formatted_user, "tools": {}}
+
 
 def discover_tasks() -> List[TaskBuilder]:
     """Discover all tasks in the task_data directory."""
@@ -116,14 +118,13 @@ def discover_tasks() -> List[TaskBuilder]:
 
     # Get all subdirectories that contain the required task files
     for task_dir in tasks_dir.iterdir():
-        if task_dir.is_dir() and not task_dir.name.startswith('.'):
-
-
+        if task_dir.is_dir() and not task_dir.name.startswith("."):
             # Check if all required files exist
             if all((task_dir / file).exists() for file in REQUIRED_FILES):
                 tasks.append(TaskBuilder(task_dir.name))
 
     return tasks
+
 
 def create_action_enum() -> Type[Enum]:
     """Dynamically create an Action enum from discovered tasks."""
@@ -132,15 +133,16 @@ def create_action_enum() -> Type[Enum]:
     # Create enum members dict
     # Convert task names to uppercase and replace spaces/hyphens with underscores
     enum_members = {
-        task.name.upper().replace('-', '_').replace(' ', '_'): task.name.lower()
+        task.name.upper().replace("-", "_").replace(" ", "_"): task.name.lower()
         for task in tasks
     }
 
     # Always add a default "let the conversation continue" action
-    enum_members['LET_THE_CONVERSATION_CONTINUE'] = 'let_the_conversation_continue'
+    enum_members["LET_THE_CONVERSATION_CONTINUE"] = "let_the_conversation_continue"
 
     # Create the enum dynamically
-    return Enum('Action', enum_members)
+    return Enum("Action", enum_members)
+
 
 # Create the Action enum when module is imported
 if TYPE_CHECKING:
@@ -154,6 +156,7 @@ if TYPE_CHECKING:
 else:
     Action = create_action_enum()
 
+
 def get_task_by_action(action: "Action") -> TaskBuilder | None:
     """Get the TaskBuilder instance corresponding to an Action enum value."""
     tasks = discover_tasks()
@@ -162,6 +165,7 @@ def get_task_by_action(action: "Action") -> TaskBuilder | None:
             return task
     return None
 
+
 def get_parser() -> argparse.ArgumentParser:
     """Argument parser should collect a task which have the same name as the
     subfolders in this directory.
@@ -169,11 +173,7 @@ def get_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Task prompt builder")
 
     # Get list of tasks by looking at subdirectories in current directory
-    tasks = [
-        d.name
-        for d in Path(__file__).resolve().parent.iterdir()
-        if d.is_dir() and not d.name.startswith(".")
-    ]
+    tasks = [d.name for d in discover_tasks()]
 
     parser.add_argument(
         "task",
@@ -190,11 +190,12 @@ def get_parser() -> argparse.ArgumentParser:
     return parser
 
 
-
 def main(args: argparse.Namespace):
     # Initialize TaskBuilder with the specified task folder
     task_builder = TaskBuilder(args.task)
-    transcript = format_transcript_for_llm(merge_into_user_messages(load_transcript(args.transcript)))
+    transcript = format_transcript_for_llm(
+        merge_into_user_messages(load_transcript(args.transcript))
+    )
     # Example system and user prompts - these could be loaded from files as well
     system_prompt = """
 You will receive a transcript from a conversation, based on the conversation complete the following task:
@@ -219,7 +220,9 @@ You will now receive a transcript
     # Generate task prompt
     print()
     description = task_builder.get_task_trigger()
-    task_output = task_builder.get_task_prompt(system_prompt, user_prompt, transcript=transcript)
+    task_output = task_builder.get_task_prompt(
+        system_prompt, user_prompt, transcript=transcript
+    )
     pprint(description)
     pprint(task_output)
 
