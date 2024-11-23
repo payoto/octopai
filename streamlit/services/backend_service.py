@@ -34,7 +34,6 @@ def send_to_backend(backend_url: str, meeting_url: str, host_name: str, transcri
         return True, annotations
 
     except requests.exceptions.RequestException as e:
-        raise
         return False, {
             "error": str(e),
             "payload_sent": payload
@@ -42,4 +41,4 @@ def send_to_backend(backend_url: str, meeting_url: str, host_name: str, transcri
 
 def process_chunk(chunk: bytes):
     # Implement your logic to process each chunk here
-    return json.load(chunk.decode('utf-8'))
+    return json.loads(chunk.decode('utf-8'))

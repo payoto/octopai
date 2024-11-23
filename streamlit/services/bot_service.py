@@ -1,7 +1,11 @@
 import requests
 import streamlit as st
+from pathlib import Path
+import json
 
 def create_bot(api_key, meeting_url):
+    if Path(meeting_url).exists():
+        return meeting_url
     url = "https://us-west-2.recall.ai/api/v1/bot"
     headers = {
         "accept": "application/json",
@@ -35,6 +39,8 @@ def create_bot(api_key, meeting_url):
         return None
 
 def get_bot_status(api_key, bot_id):
+    if Path(bot_id).exists():
+        return "Dummy service from file"
     url = f"https://us-west-2.recall.ai/api/v1/bot/{bot_id}"
     headers = {
         "accept": "application/json",
@@ -48,6 +54,8 @@ def get_bot_status(api_key, bot_id):
         return None
 
 def fetch_transcripts(api_key, bot_id):
+    if Path(bot_id).exists():
+        return json.loads(Path(bot_id).read_text())
     url = f"https://us-west-2.recall.ai/api/v1/bot/{bot_id}/transcript"
     headers = {
         "accept": "application/json",
@@ -62,6 +70,8 @@ def fetch_transcripts(api_key, bot_id):
         return None
 
 def get_chat_messages(api_key, bot_id):
+    if Path(bot_id).exists():
+        return []
     url = f"https://us-west-2.recall.ai/api/v1/bot/{bot_id}/chat-messages/"
     headers = {
         "accept": "application/json",
@@ -76,6 +86,8 @@ def get_chat_messages(api_key, bot_id):
         return None
 
 def send_message(api_key, bot_id, message):
+    if Path(bot_id).exists():
+        return True
     url = f"https://us-west-2.recall.ai/api/v1/bot/{bot_id}/send_chat_message"
     headers = {
         "accept": "application/json",
