@@ -1,0 +1,2 @@
+Scenario: A participant is dominating the conversation, and the host needs to manage this effectively.
+Analyse the last conversation in the transcript, summarise the key message and gently intervene to manage dominance

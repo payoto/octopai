@@ -1,0 +1,3 @@
+Scenario: A participant is unsure about their vision, and the host needs to guide them thoughtfully.
+
+when a participant is unsure about their vision then provide them with a thoughtful guidance.
