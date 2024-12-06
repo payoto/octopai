@@ -1,121 +1,154 @@
-# lightweight_boilerplate
-Represents initial solution with minimal functionality like process text and images.
-It's a starting point includes basic structure and essential components.
+# OctopAI Bot
 
-### Features
-- Playground page
-- Chat page
-- Processing text to text
-- Processing image to text
+OctopAI is an AI-powered meeting assistant that helps guide conversations and provide relevant information. It joins meetings as a virtual participant and can analyze conversations in real-time.
 
-### Tech Stack
+## Features
 
-<b>Frontend</b>
--> [read more](frontend/README.md)
+The Streamlit UI provides several pages for managing and monitoring the bot:
 
-- [Next.js](https://nextjs.org/docs):                           React framework for production-ready applications
-- [Tailwind CSS](https://tailwindcss.com/docs/installation):    Utility-first CSS framework
-- [shadcn/ui](https://ui.shadcn.com/docs):                      Beautifully designed components built with Radix UI and Tailwind CSS
-- [Vercel AI SDK](https://sdk.vercel.ai/docs/introduction):     AI-powered features integration
+### Main Page
 
-<b>Backend</b>
--> [read more](backend/README.md)
+Start UI before you provide a meeting
 
-- [FastAPI](https://fastapi.tiangolo.com/):         Modern, fast (high-performance) Python web framework
-- [Anthropic](https://docs.anthropic.com/en/home):       AI integration for advanced natural language processing
+![Main page start](docs/screenshots/main_start.png)
 
-# Creating a Repository
-1. Click the <b>USE THIS TEMPLATE</b> button in the top right
-2. Name your project
-3. The content in the repository will be used for the hackathon
+Interface as a meeting is running:
 
-# LOCAL usage
+![](docs/screenshots/main_conversation.png)
 
-For local project installation, you will need:
-- [Anthropic API token](https://console.anthropic.com/dashboard)
+On the left you will find the transcript with the names of the participants and on the
+right the actions suggested by OctopAI.
 
-### Your computer
-- [Python](https://www.python.org/)
-- [Node.js](https://nodejs.org/en)
-- Linux or MacOS operating system
 
-### Codespaces
-- At GitHub repository -> Code -> Create codespace on main
+- Create and configure new bot instances
+- Monitor live meeting transcripts and bot responses
+- Send messages to the meeting chat
+- Control bot behavior with toggles for auto-refresh and dummy backend
 
-## 1. Installation
-1. Clone the repository
-```
-git clone github.com/yourreponame
-```
-3. Frontend folder
-```
-make install
-```
-3. Backend folder
-```
-make setup
-```
-3.1 Paste API KEY to .env file
-```
-ANTHROPIC_API_KEY=YOUR_API_KEY
-```
-## 2. Run the full-stack boilerplate
-1. frontend
-```
-cd ./frontend/
-make dev
-```
-2. backend
-```
-cd ./backend/
-make dev
+
+### Past Conversations
+
+![past conversation UI](docs/screenshots/past_conversations.png)
+
+- Review previous conversations
+- Load example conversations
+- Upload conversation JSON files
+
+### Backend Monitor (developer)
+
+- View real-time communication between frontend and backend
+- Monitor request/response pairs
+- Configure refresh intervals
+- Check backend connection status
+
+### Chat Messages (developer)
+
+- View raw chat data
+- Download chat history
+
+### Raw Transcript Data (developer)
+
+- Access raw transcript data
+- Debug session information
+- Download transcript data
+
+## Setup Instructions
+
+### Prerequisites
+
+1. System Packages:
+```bash
+sudo apt install python3 python3-venv build-essential docker-ce docker-ce-cli docker-buildx-plugin docker-compose-plugin
 ```
 
-## DONE
+2. Account Requirements:
+- Recall.ai API key for meeting bot functionality
+- Anthropic API key for Claude integration
 
-For deployment -> take a look at Frontend [README.md](frontend/README.md) & Backend [README.md](backend/README.md)
+3. Environment Setup:
+```bash
+# Clone repository
+git clone [repo-url]
+cd [repo-name]
 
----
+# Create virtual environment
+python3 -m venv .venv
+source .venv/bin/activate
 
-# Structure
+# Install dependencies
+pip install -r requirements.txt
 ```
-root/
-│
-├── backend/
-│   ├── app/
-│   │   ├── api/
-│   │   │   └── chat.py
-│   │   ├── core/
-│   │   │   ├── config.py 
-│   │   │   └── logging.py
-│   │   ├── models/
-│   │   │   └── request_models.py
-│   │   ├── services/
-│   │   │   └── anthropic_service.py
-│   │   ├── utils/
-│   │   │   └── prompt.py
-│   │   └── main.py
-│   ├── .env.example
-│   ├── docker-compose.yml
-│   ├── Dockerfile
-│   ├── README.md
-│   ├── Requirements.txt
-│   └── setup.sh
-│
-├── frontend/
-│   ├── src/
-│   │   ├── app/
-│   │   ├── shared/
-│   │   └── widgets/
-│   ├── .env.example
-│   ├── components.json
-│   ├── package-lock.json
-│   ├── package.json
-│   ├── postcss.config.mjs
-│   ├── README.md
-│   ├── tailwind.config.js
-│   └── tsconfig.json
-│
-├── LICENSE
-└── README.md
+
+4. Configuration:
+Create `.env` file with:
 ```
+API_KEY=your_recall_api_key
+ANTHROPIC_API_KEY=your_anthropic_api_key
+BACKEND_URL=http://127.0.0.1:8001
+```
+
+### Running the Application
+
+1. Start Backend:
+```bash
+cd backend
+uvicorn main:app --host 0.0.0.0 --port 8000
+```
+
+2. Start Frontend:
+```bash
+cd streamlit
+streamlit run main.py
+```
+
+## Backend Architecture
+
+The backend follows a modular architecture:
+
+```
+backend/
+├── app/
+│   ├── api/          # API endpoints
+│   ├── core/         # Core configurations
+│   ├── models/       # Data models
+│   ├── services/     # Business logic
+│   └── utils/        # Helper functions
+```
+
+Key Components:
+- FastAPI for API endpoints
+- Anthropic's Claude for conversation analysis
+- ChromaDB for vector storage (optional)
+- Custom prompt engineering pipeline
+
+Communication Flow:
+1. Frontend sends meeting transcripts
+2. Backend processes text through prompt pipeline
+3. Claude analyzes content and generates responses
+4. Processed results returned to frontend
+
+## Action Builder Interface
+
+![Action builder interface](docs/screenshots/task_builder.png)
+
+The Action Builder allows creating new bot behaviors:
+
+1. Start the builder:
+```bash
+cd backend
+streamlit run prompt_builder.py
+```
+
+2. Interface features:
+- Create/edit action templates
+- Define triggers and responses
+- Test with sample conversations
+- Version control for prompts
+
+3. Action components:
+- Description: Action purpose
+- Triggers: When to activate
+- Response format: Output structure
+- Example responses: Good/bad examples
+
+Actions are stored in `app/task_data/` and automatically loaded by the backend.
