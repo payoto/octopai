@@ -60,13 +60,23 @@
   <path d="M150,130 L150,200" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
   <path d="M250,240 L300,240" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
   <path d="M400,130 L400,200" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
-  <path d="M500,240 L590,240" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <path d="M500,240 L580,240" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <path d="M500,90 L580,90" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
 
-  <!-- LLM tool call label -->
-  <text x="545" y="230" text-anchor="middle" font-family="Arial" font-size="12" fill="#666">
+  <!-- Arrow labels -->
+  <text x="540" y="210" text-anchor="middle" font-family="Arial" font-size="12" fill="#666">
     <tspan>LLM tool call</tspan>
-    <tspan x="545" dy="15">selects</tspan>
+    <tspan x="540" dy="15">selects</tspan>
   </text>
+  <text x="405" y="150" text-anchor="left" font-family="Arial" font-size="12" fill="#666">
+    <tspan>Defines a tool</tspan>
+    <tspan x="405" dy="15">for structured output</tspan>
+  </text>
+  <text x="505" y="60" text-anchor="left" font-family="Arial" font-size="12" fill="#666">
+    <tspan>Defines</tspan>
+    <tspan x="505" dy="15">prompts</tspan>
+  </text>
+
 
   <!-- Arrow marker definition -->
   <defs>
