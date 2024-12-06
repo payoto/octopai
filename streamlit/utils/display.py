@@ -6,6 +6,7 @@ from pathlib import Path
 import requests
 import uuid
 import time
+import json
 
 def send_message(api_key, bot_id, message):
     if Path(bot_id).exists():
@@ -158,7 +159,17 @@ def display_combined_chat(transcripts, chat_messages, backend_messages=None):
 
     # Get merged and sorted messages
     all_messages = merge_messages_by_timestamp(transcripts or [], backend_messages or [])
+    display_all_messages(all_messages)
+    with st.sidebar:
+        st.download_button(
+            "Download Chat Transcript",
+            json.dumps(all_messages, indent=2),
+            "chat_transcript.json",
+            "application/json"
+        )
 
+
+def display_all_messages(all_messages):
     # Initialize side by side containers
     containers = SideBySideContainers([1, 1], align=st.toggle("Align messages", True))
 
