@@ -1,0 +1,85 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="800" height="500" fill="#ffffff"/>
+
+  <!-- Input transcript box -->
+  <rect x="50" y="50" width="200" height="80" rx="5" fill="#e3f2fd" stroke="#1976d2"/>
+  <text x="150" y="95" text-anchor="middle" font-family="Arial" fill="#1976d2">
+    <tspan x="150" dy="0">Raw Meeting</tspan>
+    <tspan x="150" dy="20">Transcript</tspan>
+  </text>
+
+  <!-- Processing steps -->
+  <rect x="50" y="200" width="200" height="80" rx="5" fill="#e8f5e9" stroke="#388e3c"/>
+  <text x="150" y="245" text-anchor="middle" font-family="Arial" fill="#388e3c">
+    <tspan x="150" dy="0">Merge Messages by</tspan>
+    <tspan x="150" dy="20">Speaker</tspan>
+  </text>
+
+  <!-- Task Database -->
+  <rect x="300" y="50" width="200" height="80" rx="5" fill="#fff3e0" stroke="#f57c00"/>
+  <text x="400" y="95" text-anchor="middle" font-family="Arial" fill="#f57c00">
+    <tspan x="400" dy="0">Task Database</tspan>
+    <tspan x="400" dy="20">(Prompts/Examples)</tspan>
+  </text>
+
+  <!-- LLM Analysis -->
+  <rect x="300" y="200" width="200" height="80" rx="5" fill="#f3e5f5" stroke="#7b1fa2"/>
+  <text x="400" y="245" text-anchor="middle" font-family="Arial" fill="#7b1fa2">
+    <tspan x="400" dy="0">Claude Analysis</tspan>
+    <tspan x="400" dy="20">(LLM API Request)</tspan>
+  </text>
+
+  <!-- Actions Container Box -->
+  <rect x="580" y="50" width="200" height="350" rx="5" fill="#eeeeee" stroke="#666"/>
+  <text x="680" y="80" text-anchor="middle" font-family="Arial" font-weight="bold">Possible Actions</text>
+
+  <!-- Individual Action Boxes -->
+  <rect x="590" y="100" width="180" height="70" rx="5" fill="#e1f5fe" stroke="#0288d1"/>
+  <text x="680" y="135" text-anchor="middle" font-family="Arial" fill="#0288d1">
+    <tspan x="680" dy="0">Deepen Reflection</tspan>
+    <tspan x="680" dy="20" font-size="12">(LLM API Request)</tspan>
+  </text>
+
+  <rect x="590" y="180" width="180" height="70" rx="5" fill="#f3e5f5" stroke="#7b1fa2"/>
+  <text x="680" y="215" text-anchor="middle" font-family="Arial" fill="#7b1fa2">
+    <tspan x="680" dy="0">Conflict Resolution</tspan>
+    <tspan x="680" dy="20" font-size="12">(LLM API Request)</tspan>
+  </text>
+
+  <rect x="590" y="260" width="180" height="70" rx="5" fill="#e8f5e9" stroke="#388e3c"/>
+  <text x="680" y="295" text-anchor="middle" font-family="Arial" fill="#388e3c">
+    <tspan x="680" dy="0">Generate Query</tspan>
+    <tspan x="680" dy="20" font-size="12">(LLM API Request)</tspan>
+  </text>
+
+  <rect x="590" y="340" width="180" height="50" rx="5" fill="#fff3e0" stroke="#f57c00"/>
+  <text x="680" y="370" text-anchor="middle" font-family="Arial" fill="#f57c00">Continue Conversation</text>
+
+  <!-- Flow arrows -->
+  <path d="M150,130 L150,200" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <path d="M250,240 L300,240" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <path d="M400,130 L400,200" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <path d="M500,240 L590,240" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- LLM tool call label -->
+  <text x="545" y="230" text-anchor="middle" font-family="Arial" font-size="12" fill="#666">
+    <tspan>LLM tool call</tspan>
+    <tspan x="545" dy="15">selects</tspan>
+  </text>
+
+  <!-- Arrow marker definition -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+  </defs>
+
+  <!-- Labels -->
+  <text x="200" y="430" text-anchor="middle" font-family="Arial">
+    <tspan x="200" dy="0" font-size="14" font-weight="bold">Action Selection Process:</tspan>
+    <tspan x="200" dy="25" font-size="12">1. Merge speaker messages for context</tspan>
+    <tspan x="200" dy="20" font-size="12">2. Match against task triggers</tspan>
+    <tspan x="200" dy="20" font-size="12">3. Generate appropriate response</tspan>
+  </text>
+</svg>

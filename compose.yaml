@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - CHROMA_COLLECTION_NAME=octopai_corpus
+    volumes:
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+      start_period: 3s
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  frontend:
+    build:
+      context: ./streamlit
+      dockerfile: Dockerfile
+    ports:
+      - "8501:8501"
+    expose:
+      - 8501
+    environment:
+      - RECALL_API_KEY=${RECALL_API_KEY}
+      - BACKEND_URL=http://backend:8000
+    volumes:
+      - ./logs:/app/logs
+    depends_on:
+      backend:
+        condition: service_healthy

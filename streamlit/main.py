@@ -29,7 +29,7 @@ def init_session_state():
     if 'backend_messages' not in st.session_state:
         st.session_state.backend_messages = []
     if 'api_key' not in st.session_state:
-        st.session_state.api_key = os.getenv("API_KEY", "")
+        st.session_state.api_key = os.getenv("RECALL_API_KEY", "")
     if 'backend_url' not in st.session_state:
         st.session_state.backend_url = os.getenv("BACKEND_URL", "http://127.0.0.1:8001")
     if 'meeting_url' not in st.session_state:
