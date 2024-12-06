@@ -61,7 +61,7 @@ def create_bot(api_key, meeting_url):
             st.error("Authentication failed. Please check your API key.")
             return None
         response.raise_for_status()
-        bot_id = response.json().get("bot_id")
+        bot_id = response.json()['id']
         set_octopus(bot_id)
         return bot_id
     except requests.exceptions.RequestException as e:
